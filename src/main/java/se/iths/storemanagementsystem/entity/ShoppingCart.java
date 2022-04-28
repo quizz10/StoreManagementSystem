@@ -17,7 +17,7 @@ public class ShoppingCart {
     Set<Item> items = new HashSet<>();
 
     @OneToOne
-    private Customer customer;
+    private UserEntity user;
 
 
     public ShoppingCart(){
@@ -33,12 +33,12 @@ public class ShoppingCart {
     }
 
     @JsonbTransient
-    public Customer getCustomer() {
-        return customer;
+    public UserEntity getCustomer() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomer(UserEntity user) {
+        this.user = user;
     }
 
     public Long getId() {

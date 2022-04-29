@@ -15,7 +15,7 @@ public class StorePrincipal implements UserDetails {
     private final UserEntity userEntity;
 
     public StorePrincipal(UserEntity userEntity) {
-        this.userEntity = StorePrincipal.this.userEntity;
+        this.userEntity = userEntity;
     }
 
     @Override

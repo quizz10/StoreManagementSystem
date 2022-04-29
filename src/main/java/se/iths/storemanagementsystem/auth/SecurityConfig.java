@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(StoreUserDetailsService storeUserDetailsService) {
         this.storeUserDetailsService = storeUserDetailsService;
     }
-
+/*
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .withUser("admin").roles("ADMIN").password(bCryptPasswordEncoder().encode("password"));
     }
-
+*/
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/users/signup").permitAll()
+                .antMatchers("/", "/user/signup").permitAll()
                 .antMatchers("/adminportal").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

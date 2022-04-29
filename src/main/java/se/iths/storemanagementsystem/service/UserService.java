@@ -10,6 +10,7 @@ import se.iths.storemanagementsystem.repository.ShoppingCartRepository;
 import se.iths.storemanagementsystem.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.WebApplicationException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,10 +44,25 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
+    // Method for adding an admin and setting up admin+customer roles, is run only once.
+    public void addInitialAdmin() {
+        roleRepository.save(new RoleEntity("ADMIN"));
+        roleRepository.save(new RoleEntity("CUSTOMER"));
+        UserEntity admin = new UserEntity("Ante", "ante@ante.se", bCryptPasswordEncoder.encode("123"));
+        admin.setRole(roleRepository.findByName("ADMIN"));
+        userRepository.save(admin);
+    }
+
     public Optional<UserEntity> updateUserRole(Long id, String roleName) {
         Optional<UserEntity> foundUser = userRepository.findById(id);
         RoleEntity role = roleRepository.findByName(roleName);
+        if (role == null) {
+            // throw new WebApplicationException()
+            //Todo: Add custom exception for null role ^
+        }
         foundUser.get().setRole(role);
+
+
         return Optional.ofNullable(foundUser).orElseThrow(EntityNotFoundException::new);
     }
 

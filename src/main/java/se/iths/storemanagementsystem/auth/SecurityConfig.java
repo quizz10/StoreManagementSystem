@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/user/signup").permitAll()
+                .antMatchers("/", "/user/signup", "/user/setup").permitAll()
                 .antMatchers("/changerole", "/adminportal").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

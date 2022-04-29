@@ -7,6 +7,7 @@ import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.service.UserService;
 
 
+import javax.ws.rs.POST;
 import javax.ws.rs.QueryParam;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RequestMapping("user")
 public class UserController {
 
+    boolean isSetup;
     UserService userService;
 
     public UserController(UserService userService) {
@@ -30,6 +32,14 @@ public class UserController {
     public ResponseEntity<Optional<UserEntity>> updateRole(@PathVariable Long id, @RequestParam String role){
         Optional<UserEntity> user = userService.updateUserRole(id, role);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("setup")
+    public void setupDb(){
+        if (!isSetup){
+            userService.addInitialAdmin();
+        }
+        isSetup = true;
     }
 
     @GetMapping("{id}")

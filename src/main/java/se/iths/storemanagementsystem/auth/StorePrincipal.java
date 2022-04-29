@@ -8,6 +8,7 @@ import se.iths.storemanagementsystem.entity.UserEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public class StorePrincipal implements UserDetails {
@@ -20,12 +21,12 @@ public class StorePrincipal implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        Set<RoleEntity> roles = userEntity.getRoles();
-        Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>(roles.size());
+        RoleEntity role = userEntity.getRole();
+        Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>(1);
 
-        for (RoleEntity role : roles) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
+//        for (RoleEntity role : roles) {
+           grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+//        }
         return grantedAuthorities;
     }
 

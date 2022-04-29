@@ -16,27 +16,20 @@ public class UserEntity {
     private String password;
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Item> items = new ArrayList<>();
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<RoleEntity> roles = new HashSet<>();
+    @ManyToOne(cascade = CascadeType.ALL)
+    private RoleEntity role;
 
 
-    public void addRole(RoleEntity role) {
-        roles.add(role);
-        role.getUsers().add(this);
-    }
-
-    public void removeRole(RoleEntity role) {
-        roles.remove(role);
-        role.getUsers().remove(this);
-    }
 
     public void addItem(Item item) {
         items.add(item);
     }
 
-    public UserEntity(String username, String email) {
+    public UserEntity(String username, String email, String password, RoleEntity role) {
         this.username = username;
         this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
     public UserEntity() {}
@@ -81,11 +74,11 @@ public class UserEntity {
         this.items = items;
     }
 
-    public Set<RoleEntity> getRoles() {
-        return roles;
+    public RoleEntity getRole() {
+        return role;
     }
 
-    public void setRoles(Set<RoleEntity> roles) {
-        this.roles = roles;
+    public void setRole(RoleEntity role) {
+        this.role = role;
     }
 }

@@ -10,7 +10,7 @@ import se.iths.storemanagementsystem.service.UserService;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("customer")
+@RequestMapping("user")
 public class UserController {
 
     UserService userService;
@@ -20,42 +20,42 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserEntity> createCustomer(UserEntity customer) {
-        userService.addCustomer(customer);
-        return new ResponseEntity<>(customer, HttpStatus.CREATED);
+    public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user) {
+        userService.addUser(user);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Optional<UserEntity>> findCustomer(@PathVariable Long id) {
+    public ResponseEntity<Optional<UserEntity>> findUser(@PathVariable Long id) {
 //        notFoundError(id);
-        Optional<UserEntity> foundCustomer = userService.findCustomerById(id);
-        return new ResponseEntity<>(foundCustomer, HttpStatus.OK);
+        Optional<UserEntity> foundUser = userService.findUserById(id);
+        return new ResponseEntity<>(foundUser, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<UserEntity>> findAllCustomers() { // får no body istället för exception i insomnia
-        Iterable<UserEntity> foundCustomers = userService.findAllCustomers();
-        if (foundCustomers == null) {
+    public ResponseEntity<Iterable<UserEntity>> findAllUsers() { // får no body istället för exception i insomnia
+        Iterable<UserEntity> foundUsers = userService.findAllUsers();
+        if (foundUsers == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(foundCustomers, HttpStatus.OK);
+        return new ResponseEntity<>(foundUsers, HttpStatus.OK);
     }
 
     @PatchMapping
-    public ResponseEntity<Optional<UserEntity>> updateCustomer(@PathVariable Long id, Optional<UserEntity> customer) {
+    public ResponseEntity<Optional<UserEntity>> updateUser(@PathVariable Long id, Optional<UserEntity> user) {
 //            notFoundError(id);
-            customer = userService.updateCustomer(id, customer);
-        return new ResponseEntity<>(customer, HttpStatus.OK);
+            user = userService.updateCustomer(id, user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
-            userService.deleteCustomer(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+            userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 //    public ResponseEntity<Object> notFoundError(Long id) {
-//        if (!customerService.findCustomerById(id).isPresent()) {
+//        if (!customerService.findUserById(id).isPresent()) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
 //        return null;

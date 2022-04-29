@@ -25,11 +25,10 @@ public class UserEntity {
         items.add(item);
     }
 
-    public UserEntity(String username, String email, String password, RoleEntity role) {
+    public UserEntity(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     public UserEntity() {}

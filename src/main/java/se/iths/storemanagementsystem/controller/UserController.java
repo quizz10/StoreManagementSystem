@@ -7,6 +7,7 @@ import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.service.UserService;
 
 
+import javax.ws.rs.QueryParam;
 import java.util.Optional;
 
 @RestController
@@ -23,6 +24,12 @@ public class UserController {
     public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user) {
         userService.addUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("updaterole/{id}")
+    public ResponseEntity<Optional<UserEntity>> updateRole(@PathVariable Long id, @RequestParam String role){
+        Optional<UserEntity> user = userService.updateUserRole(id, role);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("{id}")

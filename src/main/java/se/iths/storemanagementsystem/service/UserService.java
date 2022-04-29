@@ -20,6 +20,7 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final ShoppingCartRepository shoppingCartRepository;
+
     public UserService(RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
                        UserRepository userRepository, ShoppingCartRepository shoppingCartRepository) {
         this.roleRepository = roleRepository;
@@ -29,17 +30,24 @@ public class UserService {
     }
 
 
-    public void addUser(UserEntity userEntity){
+    public void addUser(UserEntity userEntity) {
 
         userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
-//        RoleEntity role = roleRepository.findByName(userEntity.getRole().getName());
-//        userEntity.setRole(role);
+        RoleEntity role = roleRepository.findByName("CUSTOMER");
+        userEntity.setRole(role);
 
 //        ShoppingCart shoppingCart = new ShoppingCart();
 //        userEntity.setShoppingCart(shoppingCart);
 //        shoppingCart.setCustomer(userEntity);
 //        shoppingCartRepository.save(shoppingCart);
         userRepository.save(userEntity);
+    }
+
+    public Optional<UserEntity> updateUserRole(Long id, String roleName) {
+        Optional<UserEntity> foundUser = userRepository.findById(id);
+        RoleEntity role = roleRepository.findByName(roleName);
+        foundUser.get().setRole(role);
+        return Optional.ofNullable(foundUser).orElseThrow(EntityNotFoundException::new);
     }
 
     public Optional<UserEntity> findUserById(Long id) {

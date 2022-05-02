@@ -1,7 +1,7 @@
 package se.iths.storemanagementsystem.entity;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,10 +13,11 @@ public class Department {
 
     private String departmentName;
 
-    @OneToMany
-    private List<UserEntity> employeeList;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<UserEntity> employeeList = new ArrayList<>();
 
     @ManyToOne
+    @Transient
     private Store store;
 
 
@@ -27,7 +28,7 @@ public class Department {
         this.departmentName = departmentName;
     }
 
-    @JsonbTransient
+
     public Store getStore() {
         return store;
     }

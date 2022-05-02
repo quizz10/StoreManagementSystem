@@ -51,11 +51,14 @@ public class UserService {
 
         roleRepository.save(new RoleEntity("ADMIN"));
         roleRepository.save(new RoleEntity("CUSTOMER"));
+       RoleEntity employeeRole =  roleRepository.save(new RoleEntity("EMPLOYEE"));
 
+        employee.setRole(employeeRole);
         admin.setRole(roleRepository.findByName("ADMIN"));
         addUser(customer);
-        employee.setDepartment(frukt);
+//        employee.setDepartment(frukt);
 
+//        frukt.addEmployee(employee);
         departmentRepository.save(frukt);
         itemRepository.save(new Item("Citron", 10));
         itemRepository.save(new Item("Banan", 29));

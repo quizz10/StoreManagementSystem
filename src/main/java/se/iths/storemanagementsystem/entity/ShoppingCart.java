@@ -1,6 +1,5 @@
 package se.iths.storemanagementsystem.entity;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Optional;

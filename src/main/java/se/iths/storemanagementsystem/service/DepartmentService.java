@@ -35,7 +35,7 @@ public class DepartmentService {
     public Optional<Department> updateDepartment(Long id, String departmentName) {
         Optional<Department> foundDepartment = departmentRepository.findById(id);
 
-        if(foundDepartment.isPresent()){
+        if (foundDepartment.isPresent()) {
             setFields(departmentName, foundDepartment);
         } else {
             throw new RuntimeException("Could not find");
@@ -53,7 +53,10 @@ public class DepartmentService {
 
         Optional<Department> foundDepartment = findDepartmentById(departmentId);
         Optional<UserEntity> foundUser = findUserById(userId);
-        foundDepartment.get().addEmployee(foundUser.get());
+        if (foundUser.get().getRole().getName().equals("EMPLOYEE")) {
+            foundDepartment.get().addEmployee(foundUser.get());
+            departmentRepository.save(foundDepartment.get());
+        }
         return foundUser;
     }
 
@@ -69,7 +72,7 @@ public class DepartmentService {
     }
 
     private void setFields(String departmentName, Optional<Department> foundDepartment) {
-        if(!(departmentName == null)) {
+        if (!(departmentName == null)) {
             foundDepartment.get().setDepartmentName(departmentName);
         }
     }

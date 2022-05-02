@@ -1,8 +1,7 @@
 package se.iths.storemanagementsystem.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotEmpty;
+
 
 @Entity
 public class Item {
@@ -11,15 +10,12 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotEmpty
     private String name;
 
-    @DecimalMin("1")
     private double price;
 
     @ManyToOne
     private Department department;
-
 
     public Item() {
     }

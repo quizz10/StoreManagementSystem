@@ -49,12 +49,13 @@ public class UserService {
         UserEntity customer = new UserEntity("Customer", "testuser@ica.se", bCryptPasswordEncoder.encode("123"));
         UserEntity employee = new UserEntity("Employee", "employee@ica.se", bCryptPasswordEncoder.encode("123"));
 
+        roleRepository.save(new RoleEntity("ADMIN"));
+        roleRepository.save(new RoleEntity("CUSTOMER"));
+
         admin.setRole(roleRepository.findByName("ADMIN"));
         addUser(customer);
         employee.setDepartment(frukt);
 
-        roleRepository.save(new RoleEntity("ADMIN"));
-        roleRepository.save(new RoleEntity("CUSTOMER"));
         departmentRepository.save(frukt);
         itemRepository.save(new Item("Citron", 10));
         itemRepository.save(new Item("Banan", 29));

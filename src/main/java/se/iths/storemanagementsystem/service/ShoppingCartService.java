@@ -15,6 +15,7 @@ public class ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final ItemRepository itemRepository;
 
+
     public ShoppingCartService(ShoppingCartRepository shoppingCartRepository, ItemRepository itemRepository) {
         this.shoppingCartRepository = shoppingCartRepository;
         this.itemRepository = itemRepository;
@@ -38,6 +39,7 @@ public class ShoppingCartService {
         Optional<Item> foundItem = itemRepository.findById(itemId);
 
             foundCart.get().addItem(Optional.of(foundItem.get()));
+            shoppingCartRepository.save(foundCart.get());
             return foundCart;
 
     }
@@ -47,6 +49,7 @@ public class ShoppingCartService {
         Optional<Item> foundItem = itemRepository.findById(itemId);
 
             foundCart.get().removeItem(foundItem.get());
+            shoppingCartRepository.save(foundCart.get());
             return foundCart;
 
     }

@@ -3,14 +3,9 @@ package se.iths.storemanagementsystem.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.iths.storemanagementsystem.entity.Item;
 import se.iths.storemanagementsystem.entity.ShoppingCart;
 import se.iths.storemanagementsystem.service.ShoppingCartService;
-import se.iths.storemanagementsystem.utils.JsonFormatter;
 
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 @RestController
@@ -18,7 +13,6 @@ import java.util.Optional;
 public class ShoppingCartController {
     ShoppingCartService shoppingCartService;
 
-    public ShoppingCartController() {}
 
     public ShoppingCartController(ShoppingCartService shoppingCartService) {
         this.shoppingCartService = shoppingCartService;
@@ -38,21 +32,17 @@ public class ShoppingCartController {
         return new ResponseEntity<>(foundCart, HttpStatus.FOUND);
     }
 
-    @PatchMapping("link")
-    public ResponseEntity<Optional<ShoppingCart>> linkItemToShoppingCart(@RequestParam("cartId") Long cartId, @RequestParam("itemId") Long itemId) {
-        Optional<ShoppingCart> foundCart = shoppingCartService.findShoppingCartById(cartId);
-        Optional<Item> foundItem = shoppingCartService.findItemById(itemId);
+    @PatchMapping("link/{cartId}/{itemId}")
+    public ResponseEntity<Optional<ShoppingCart>> linkItemToShoppingCart(@PathVariable("cartId") Long cartId, @PathVariable("itemId") Long itemId) {
 
             Optional<ShoppingCart> cart = shoppingCartService.linkItemToShoppingCart(cartId, itemId);
 
             return new ResponseEntity<>(cart, HttpStatus.CREATED);
     }
 
-    @Path("unlink")
-    @PATCH
-    public ResponseEntity<Optional<ShoppingCart>> unlinkItemFromShoppingCart(@QueryParam("cartId") Long cartId, @QueryParam("itemId") Long itemId) {
-        Optional<ShoppingCart> foundCart = shoppingCartService.findShoppingCartById(cartId);
-        Optional<Item> foundItem = shoppingCartService.findItemById(itemId);
+    @PatchMapping("unlink/{cartId}/{itemId}")
+    public ResponseEntity<Optional<ShoppingCart>> unlinkItemFromShoppingCart(@PathVariable("cartId") Long cartId, @PathVariable("itemId") Long itemId) {
+
 
 
             Optional<ShoppingCart> cart = shoppingCartService.unlinkItemFromShoppingCart(cartId, itemId);

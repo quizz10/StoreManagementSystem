@@ -30,7 +30,7 @@ public class StoreController {
 
     @GetMapping("{id}")
     public ResponseEntity<Optional<Store>> getStoreById(@PathVariable("id") Long id) {
-        notFoundError(id);
+//        notFoundError(id);
         Optional<Store> store = storeService.findStoreById(id);
         return new ResponseEntity<>(store, HttpStatus.OK);
     }
@@ -47,7 +47,7 @@ public class StoreController {
 
     @PatchMapping("{id}")
     public ResponseEntity<Store> updateStore(@PathVariable("id") Long id, @RequestBody Store store){
-            notFoundError(id);
+//            notFoundError(id);
            Store foundStore = storeService.updateStore(id, store);
         return new ResponseEntity<>(foundStore, HttpStatus.OK);
     }
@@ -80,10 +80,10 @@ public class StoreController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> notFoundError(Long id) {
-        if (storeService.findStoreById(id).isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return null;
-    }
+//    public ResponseEntity<Object> notFoundError(Long id) {
+//        if (storeService.findStoreById(id).isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return null;
+//    }
 }

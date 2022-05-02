@@ -70,7 +70,7 @@ public class UserController {
     }
 
 //    public ResponseEntity<Object> notFoundError(Long id) {
-//        if (!customerService.findUserById(id).isPresent()) {
+//        if (userService.findUserById(id).isEmpty()) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
 //        return null;

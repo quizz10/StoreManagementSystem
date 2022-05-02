@@ -1,16 +1,14 @@
 //package se.iths.storemanagementsystem.controller;
 //
 //import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//import se.iths.storemanagementsystem.entity.Department;
+//import org.springframework.web.bind.annotation.*;
 //import se.iths.storemanagementsystem.entity.Employee;
 //import se.iths.storemanagementsystem.service.EmployeeService;
 //import se.iths.storemanagementsystem.utils.JsonFormatter;
 //
-//import javax.inject.Inject;
-//import javax.ws.rs.*;
-//import javax.ws.rs.core.MediaType;
+//import javax.ws.rs.Path;
+//import javax.ws.rs.PathParam;
+//import javax.ws.rs.WebApplicationException;
 //import javax.ws.rs.core.Response;
 //import java.util.Optional;
 //
@@ -24,7 +22,7 @@
 //    }
 //
 //    @Path("")
-//    @POST
+//    @PostMapping
 //    public ResponseEntity<Optional<Employee>> createEmployee(Employee employee) {
 //        try {
 //            employeeService.addEmployee(employee);
@@ -35,15 +33,13 @@
 //        return Response.ok(employee).build();
 //    }
 //
-//    @Path("{id}")
-//    @GET
+//    @GetMapping("{id}")
 //    public ResponseEntity<Optional<Employee>> getEmployeeById(@PathParam("id") Long id) {
 //        notFoundError(id);
 //       return Response.ok(employeeService.findEmployeeById(id)).build();
 //    }
 //
-//    @Path("")
-//    @GET
+//    @GetMapping("")
 //    public ResponseEntity<Optional<Employee>> getAllEmployees() {
 //        if (employeeService.getAllEmployees().isEmpty()) {
 //            return Response.status(Response.Status.NO_CONTENT).entity(new JsonFormatter(Response.Status.NO_CONTENT.getStatusCode(), "There are no employees added yet")).build();
@@ -51,15 +47,15 @@
 //        return Response.ok(employeeService.getAllEmployees()).build();
 //    }
 //
-//    @Path("{id}")
-//    @PATCH
+//
+//    @PatchMapping("{id}")
 //    public ResponseEntity<Optional<Employee>> updateEmployee(@PathParam("id")Long id, Employee employee) {
 //        employeeService.updateEmployee(id, employee);
 //        return Response.ok(employee).build();
 //    }
 //
-//    @Path("{id}")
-//    @DELETE
+//
+//    @DeleteMapping("{id}")
 //    public ResponseEntity<Optional<Employee>> deleteDepartment(@PathParam("id") Long id) {
 //        notFoundError(id);
 //        employeeService.deleteDepartment(id);

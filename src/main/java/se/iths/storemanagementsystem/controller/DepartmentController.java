@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import se.iths.storemanagementsystem.entity.Department;
 import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.service.DepartmentService;
-import se.iths.storemanagementsystem.utils.JsonFormatter;
 
 import java.util.Optional;
 
@@ -30,31 +29,31 @@ public class DepartmentController {
 
 @GetMapping("{id}")
     public ResponseEntity<Optional<Department>> getDepartmentById(@PathVariable("id") Long id) {
-     //   notFoundError(id);
+//        notFoundError(id);
         Optional<Department> department = departmentService.findDepartmentById(id);
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
-/*
+
 @GetMapping
-    public ResponseEntity<Optional<Department>> getAllDepartments() {
-        List<Department> departments = departmentService.getAllDepartments();
-        if(departments.isEmpty()) {
-            return Response.status(Response.Status.NO_CONTENT).entity(new JsonFormatter(204, "There are no departments added yet.")).build();
+    public ResponseEntity<Iterable<Department>> getAllDepartments() {
+        Iterable<Department> departments = departmentService.getAllDepartments();
+        if(departments == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return Response.ok(departments).build();
+    return new ResponseEntity<>(departments, HttpStatus.OK);
     }
- */
+
 
     @PatchMapping("{id}")
-    public ResponseEntity<Optional<Department>> updateDepartmentName(@PathVariable("id") Long id, Department department ) {
+    public ResponseEntity<Optional<Department>> updateDepartmentName(@PathVariable("id") Long id, @RequestBody Optional<Department> department ) {
       //  notFoundError(id);
-        Optional<Department> updateDepartment = departmentService.updateDepartment(id, department.getDepartmentName());
+        Optional<Department> updateDepartment = departmentService.updateDepartment(id, department.get().getDepartmentName());
         return new ResponseEntity<>(updateDepartment, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Optional<Department>> deleteDepartment(@PathVariable("id") Long id) {
-      //  notFoundError(id);
+//        notFoundError(id);
         departmentService.deleteDepartment(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -75,12 +74,12 @@ public class DepartmentController {
         return new ResponseEntity<>(connectedEmployee, HttpStatus.OK);
     }
 
-/*
-    private void notFoundError(Long id) {
-        if (!departmentService.findDepartmentById(id).isPresent()) {
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(new JsonFormatter(404, "ID: " + id + " not found")).build());
-        }
-    }
 
- */
+//    private void notFoundError(Long id) {
+//        if (!departmentService.findDepartmentById(id).isPresent()) {
+//            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(new JsonFormatter(404, "ID: " + id + " not found")).build());
+//        }
+//    }
+
+
 }

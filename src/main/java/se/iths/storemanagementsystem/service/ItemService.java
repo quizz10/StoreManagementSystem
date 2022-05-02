@@ -24,9 +24,9 @@ public class ItemService {
         return Optional.ofNullable(itemRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-   /* public List<Item> getAllItems() {
-        return itemRepository.createQuery("SELECT a from Item a", Item.class).getResultList();
-    }*/
+    public Iterable<Item> getAllItems() {
+        return itemRepository.findAll();
+    }
 
     public Optional<Item> updateItem(Long id, Optional<Item> item) {
         Optional<Item> foundItem = itemRepository.findById(id);

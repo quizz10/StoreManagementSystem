@@ -32,16 +32,16 @@ public class ItemController {
         return new ResponseEntity<>(foundItem, HttpStatus.OK);
     }
 
-    /*
+
       @GetMapping
       public ResponseEntity<Iterable<Item>> getAllItems() {
           Iterable<Item> foundItems = itemService.getAllItems();
-          if (foundItems.isEmpty()) {
-              return Response.status(Response.Status.NO_CONTENT).entity(new JsonFormatter(204, "There are no items added yet.")).build();
+          if (foundItems == null) {
+              return new ResponseEntity<>(HttpStatus.NO_CONTENT);
           }
-          return Response.ok(foundItems).build();
+          return new ResponseEntity<>(foundItems, HttpStatus.OK);
       }
-  */
+
     @PatchMapping
     public ResponseEntity<Optional<Item>> updateItem(@PathVariable("id") Long id, @RequestBody Optional<Item> item) {
         // notFoundError(id);

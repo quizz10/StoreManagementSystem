@@ -3,6 +3,7 @@ package se.iths.storemanagementsystem.entity;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -24,8 +25,8 @@ public class ShoppingCart {
 
     }
 
-    public void addItem(Item item){
-        items.add(item);
+    public void addItem(Optional<Item> item){
+        items.add(item.get());
     }
 
     public void removeItem(Item item){
@@ -33,13 +34,15 @@ public class ShoppingCart {
     }
 
     @JsonbTransient
-    public UserEntity getCustomer() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setCustomer(UserEntity user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
+
+    public void removeUser(UserEntity user) { this.user = null; }
 
     public Long getId() {
         return id;
@@ -56,4 +59,5 @@ public class ShoppingCart {
     public Set<Item> getItems() {
         return items;
     }
+
 }

@@ -36,7 +36,7 @@ public class UserService {
 
 //        ShoppingCart shoppingCart = new ShoppingCart();
 //        userEntity.setShoppingCart(shoppingCart);
-//        shoppingCart.setCustomer(userEntity);
+//        shoppingCart.setUser(userEntity);
 //        shoppingCartRepository.save(shoppingCart);
         userRepository.save(userEntity);
     }

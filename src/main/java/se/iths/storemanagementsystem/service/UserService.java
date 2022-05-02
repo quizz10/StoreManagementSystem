@@ -17,20 +17,21 @@ public class UserService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final DepartmentRepository departmentRepository;
     private final ItemRepository itemRepository;
+    private final StoreRepository storeRepository;
 
     public UserService(RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                       UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, DepartmentRepository departmentRepository, ItemRepository itemRepository) {
+                       UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, DepartmentRepository departmentRepository, ItemRepository itemRepository, StoreRepository storeRepository) {
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.departmentRepository = departmentRepository;
         this.itemRepository = itemRepository;
+        this.storeRepository = storeRepository;
     }
 
 
     public void addUser(UserEntity userEntity) {
-
         userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
         RoleEntity role = roleRepository.findByName("CUSTOMER");
         userEntity.setRole(role);
@@ -39,11 +40,12 @@ public class UserService {
         userEntity.setShoppingCart(shoppingCart);
         shoppingCart.setUser(userEntity);
         shoppingCartRepository.save(shoppingCart);
-        // userRepository.save(userEntity);
+        userRepository.save(userEntity);
     }
 
     // Method for adding an admin and setting up admin+customer roles, is run only once.
     public void addInitialAdmin() {
+        Store store = new Store("ICA");
         Department frukt = new Department("Frukt & Grönt");
         UserEntity admin = new UserEntity("Admin", "admin@admin.se", bCryptPasswordEncoder.encode("123"));
         UserEntity customer = new UserEntity("Customer", "testuser@ica.se", bCryptPasswordEncoder.encode("123"));
@@ -51,19 +53,18 @@ public class UserService {
 
         roleRepository.save(new RoleEntity("ADMIN"));
         roleRepository.save(new RoleEntity("CUSTOMER"));
-       RoleEntity employeeRole =  roleRepository.save(new RoleEntity("EMPLOYEE"));
+        RoleEntity employeeRole = roleRepository.save(new RoleEntity("EMPLOYEE"));
 
         employee.setRole(employeeRole);
         admin.setRole(roleRepository.findByName("ADMIN"));
         addUser(customer);
-//        employee.setDepartment(frukt);
 
-//        frukt.addEmployee(employee);
+        frukt.addEmployee(employee);
+        storeRepository.save(store);
         departmentRepository.save(frukt);
         itemRepository.save(new Item("Citron", 10));
         itemRepository.save(new Item("Banan", 29));
         userRepository.save(admin);
-        userRepository.save(customer);
         userRepository.save(employee);
     }
 
@@ -102,6 +103,8 @@ public class UserService {
 
     public void deleteUser(Long id) {
         Optional<UserEntity> foundCustomer = findUserById(id);
+        foundCustomer.get().setShoppingCart(null);
+        foundCustomer.get().setRole(null);
         userRepository.delete(foundCustomer.get());
     }
 

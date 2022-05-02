@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.iths.storemanagementsystem.entity.Department;
+import se.iths.storemanagementsystem.entity.Item;
 import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.service.DepartmentService;
 
@@ -22,31 +23,31 @@ public class DepartmentController {
 
     @PostMapping
     public ResponseEntity<Optional<Department>> createDepartment(@RequestBody Optional<Department> department) {
-            departmentService.addDepartment(department.get());
+        departmentService.addDepartment(department.get());
 
         return new ResponseEntity<>(department, HttpStatus.CREATED);
     }
 
-@GetMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Optional<Department>> getDepartmentById(@PathVariable("id") Long id) {
 //        notFoundError(id);
         Optional<Department> department = departmentService.findDepartmentById(id);
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
-@GetMapping
+    @GetMapping
     public ResponseEntity<Iterable<Department>> getAllDepartments() {
         Iterable<Department> departments = departmentService.getAllDepartments();
-        if(departments == null) {
+        if (departments == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-    return new ResponseEntity<>(departments, HttpStatus.OK);
+        return new ResponseEntity<>(departments, HttpStatus.OK);
     }
 
 
     @PatchMapping("{id}")
-    public ResponseEntity<Optional<Department>> updateDepartmentName(@PathVariable("id") Long id, @RequestBody Optional<Department> department ) {
-      //  notFoundError(id);
+    public ResponseEntity<Optional<Department>> updateDepartmentName(@PathVariable("id") Long id, @RequestBody Optional<Department> department) {
+        //  notFoundError(id);
         Optional<Department> updateDepartment = departmentService.updateDepartment(id, department.get().getDepartmentName());
         return new ResponseEntity<>(updateDepartment, HttpStatus.OK);
     }
@@ -58,20 +59,34 @@ public class DepartmentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-@PatchMapping("linkemployee/{departmentid}/{userid}")
+    @PatchMapping("linkemployee/{departmentid}/{userid}")
     public ResponseEntity<Optional<UserEntity>> linkEmployeeToDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("userid") Long userId) {
-       // notFoundError(id);
+        // notFoundError(id);
         Optional<UserEntity> connectedEmployee = departmentService.linkEmployeeToDepartment(departmentId, userId);
 
         return new ResponseEntity<>(connectedEmployee, HttpStatus.OK);
     }
 
-@PatchMapping("unlinkemployee/{departmentid}/{userid}")
-    public ResponseEntity<Optional<UserEntity>> unlinkEmployeeToDepartment(@PathVariable("departmentid")Long departmentId, @PathVariable("userid") Long userId) {
-       // notFoundError(id);
+    @PatchMapping("unlinkemployee/{departmentid}/{userid}")
+    public ResponseEntity<Optional<UserEntity>> unlinkEmployeeToDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("userid") Long userId) {
+        // notFoundError(id);
         Optional<UserEntity> connectedEmployee = departmentService.unlinkEmployeeToDepartment(departmentId, userId);
 
         return new ResponseEntity<>(connectedEmployee, HttpStatus.OK);
+    }
+
+    @PatchMapping("linkitem/{departmentid}/{itemid}")
+    public ResponseEntity<Optional<Department>> linkItemToDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("itemid") Long itemId) {
+        Optional<Department> department = departmentService.linkItemToDepartment(departmentId, itemId);
+
+        return new ResponseEntity<>(department, HttpStatus.OK);
+    }
+
+    @PatchMapping("unlinkitem/{departmentid}/{itemid}")
+    public ResponseEntity<Optional<Department>> unLinkItemFromDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("itemid") Long itemId) {
+        Optional<Department> department = departmentService.unLinkItemFromDepartment(departmentId, itemId);
+
+        return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
 

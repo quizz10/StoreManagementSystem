@@ -1,5 +1,7 @@
 package se.iths.storemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 
@@ -20,10 +22,15 @@ public class Item {
     public Item() {
     }
 
-    // inkludera department i konstruktorn när departmentservice är klar.
     public Item(String name, double price) {
         this.name = name;
         this.price = price;
+    }
+
+    public Item(String name, double price, Department department) {
+        this.name = name;
+        this.price = price;
+        this.department = department;
     }
 
     public Long getId() {
@@ -50,6 +57,7 @@ public class Item {
         this.price = price;
     }
 
+    @JsonIgnore
     public Department getDepartment() {
         return department;
     }

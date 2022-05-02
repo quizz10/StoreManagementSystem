@@ -1,5 +1,7 @@
 package se.iths.storemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,18 @@ public class Department {
     @Transient
     private Store store;
 
+    @OneToMany
+    private List<Item> itemList = new ArrayList<>();
+
+    public void addItem (Item item){
+        itemList.add(item);
+        item.setDepartment(this);
+    }
+
+    public void removeItem(Item item){
+        itemList.remove(item);
+        item.setDepartment(null);
+    }
 
     public Department() {
     }
@@ -28,13 +42,21 @@ public class Department {
         this.departmentName = departmentName;
     }
 
-
+    @JsonIgnore
     public Store getStore() {
         return store;
     }
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public List<Item> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<Item> itemList) {
+        this.itemList = itemList;
     }
 
     public Long getId() {
@@ -62,5 +84,4 @@ public class Department {
         employeeList.remove(employee);
     }
 
-    // link to items, employee
 }

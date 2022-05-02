@@ -21,7 +21,9 @@ public class StoreService {
         this.departmentRepository = departmentRepository;
     }
 
-    public void addStore(Store store){storeRepository.save(store);}
+    public void addStore(Store store) {
+        storeRepository.save(store);
+    }
 
     public Optional<Store> findStoreById(Long id) {
         return Optional.ofNullable(storeRepository.findById(id).orElseThrow(EntityNotFoundException::new));
@@ -31,37 +33,41 @@ public class StoreService {
         return Optional.ofNullable(departmentRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public List<Store> getAllStores(){
+    public List<Store> getAllStores() {
         List<Store> stores = storeRepository.findAll();
         return stores;
     }
 
-    public Store updateStore(Long id, Store store){
+    public Store updateStore(Long id, Store store) {
         Optional<Store> foundStore = storeRepository.findById(id);
         foundStore.get().setStoreName(store.getStoreName());
         return foundStore.get();
     }
 
-    public void deleteStore(Long id){
+    public void deleteStore(Long id) {
         Optional<Store> foundStore = storeRepository.findById(id);
         storeRepository.delete(foundStore.get());
     }
 
 
-    public void linkDepartment(Long storeId, Long departmentId) {
+    public Optional<Store> linkDepartment(Long storeId, Long departmentId) {
         Optional<Store> foundStore = storeRepository.findById(storeId);
         Optional<Department> foundDepartment = departmentRepository.findById(departmentId);
 
         foundDepartment.get().setStore(foundStore.get());
         foundStore.get().getDepartmentList().add(foundDepartment.get());
+
+        return foundStore;
     }
 
 
-    public void unlinkDepartment(Long storeId, Long departmentId) {
+    public Optional<Store> unlinkDepartment(Long storeId, Long departmentId) {
         Optional<Store> foundStore = storeRepository.findById(storeId);
         Optional<Department> foundDepartment = departmentRepository.findById(departmentId);
 
         foundStore.get().getDepartmentList().remove(foundDepartment.get());
         foundDepartment.get().setStore(null);
+
+        return foundStore;
     }
 }

@@ -11,8 +11,8 @@ import se.iths.storemanagementsystem.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserService {
@@ -74,15 +74,33 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<UserEntity> updateCustomer(Long id, Optional<UserEntity> userEntity) {
-        Optional<UserEntity> foundCustomer = userRepository.findById(id);
+    public Optional<UserEntity> updateUser(Long id, Optional<UserEntity> userEntity) {
+        Optional<UserEntity> foundUser = userRepository.findById(id);
 
-        foundCustomer.get().setUsername(userEntity.get().getUsername());
-        return foundCustomer;
+        if(foundUser.isPresent()) {
+            setFields(userEntity, foundUser);
+        } else {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        userRepository.save(foundUser.get());
+        return foundUser;
     }
 
     public void deleteUser(Long id) {
         Optional<UserEntity> foundCustomer = findUserById(id);
         userRepository.delete(foundCustomer.get());
+    }
+
+
+    private void setFields(Optional<UserEntity> userEntity, Optional<UserEntity> foundUser) {
+        if(!(userEntity.get().getUsername() == null)) {
+            foundUser.get().setUsername(userEntity.get().getUsername());
+        }
+        if(!(userEntity.get().getEmail() == null)) {
+            foundUser.get().setEmail(userEntity.get().getEmail());
+        }
+        if(!(userEntity.get().getPassword() == null)) {
+            foundUser.get().setPassword(bCryptPasswordEncoder.encode(userEntity.get().getPassword()));
+        }
     }
 }

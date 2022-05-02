@@ -7,8 +7,6 @@ import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.service.UserService;
 
 
-import javax.ws.rs.POST;
-import javax.ws.rs.QueryParam;
 import java.util.Optional;
 
 @RestController
@@ -58,10 +56,10 @@ public class UserController {
         return new ResponseEntity<>(foundUsers, HttpStatus.OK);
     }
 
-    @PatchMapping
-    public ResponseEntity<Optional<UserEntity>> updateUser(@PathVariable Long id, Optional<UserEntity> user) {
+    @PatchMapping("{id}")
+    public ResponseEntity<Optional<UserEntity>> updateUser(@PathVariable Long id, @RequestBody Optional<UserEntity> user) {
 //            notFoundError(id);
-            user = userService.updateCustomer(id, user);
+            user = userService.updateUser(id, user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

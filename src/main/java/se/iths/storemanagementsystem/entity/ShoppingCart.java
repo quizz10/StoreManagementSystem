@@ -17,7 +17,8 @@ public class ShoppingCart {
     @ManyToMany
     Set<Item> items = new HashSet<>();
 
-    @OneToOne
+    @Transient
+    @OneToOne(cascade = CascadeType.ALL)
     private UserEntity user;
 
 
@@ -32,12 +33,7 @@ public class ShoppingCart {
     public void removeItem(Item item){
         items.remove(item);
     }
-
-    @JsonbTransient
-    public UserEntity getUser() {
-        return user;
-    }
-
+    
     public void setUser(UserEntity user) {
         this.user = user;
     }

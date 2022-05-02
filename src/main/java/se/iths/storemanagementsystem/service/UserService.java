@@ -2,11 +2,8 @@ package se.iths.storemanagementsystem.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import se.iths.storemanagementsystem.entity.RoleEntity;
-import se.iths.storemanagementsystem.entity.UserEntity;
-import se.iths.storemanagementsystem.repository.RoleRepository;
-import se.iths.storemanagementsystem.repository.ShoppingCartRepository;
-import se.iths.storemanagementsystem.repository.UserRepository;
+import se.iths.storemanagementsystem.entity.*;
+import se.iths.storemanagementsystem.repository.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -18,13 +15,17 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final ShoppingCartRepository shoppingCartRepository;
+    private final DepartmentRepository departmentRepository;
+    private final ItemRepository itemRepository;
 
     public UserService(RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                       UserRepository userRepository, ShoppingCartRepository shoppingCartRepository) {
+                       UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, DepartmentRepository departmentRepository, ItemRepository itemRepository) {
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
         this.shoppingCartRepository = shoppingCartRepository;
+        this.departmentRepository = departmentRepository;
+        this.itemRepository = itemRepository;
     }
 
 
@@ -34,20 +35,32 @@ public class UserService {
         RoleEntity role = roleRepository.findByName("CUSTOMER");
         userEntity.setRole(role);
 
-//        ShoppingCart shoppingCart = new ShoppingCart();
-//        userEntity.setShoppingCart(shoppingCart);
-//        shoppingCart.setUser(userEntity);
-//        shoppingCartRepository.save(shoppingCart);
-        userRepository.save(userEntity);
+        ShoppingCart shoppingCart = new ShoppingCart();
+        userEntity.setShoppingCart(shoppingCart);
+        shoppingCart.setUser(userEntity);
+        shoppingCartRepository.save(shoppingCart);
+        // userRepository.save(userEntity);
     }
 
     // Method for adding an admin and setting up admin+customer roles, is run only once.
     public void addInitialAdmin() {
+        Department frukt = new Department("Frukt & Grönt");
+        UserEntity admin = new UserEntity("Admin", "admin@admin.se", bCryptPasswordEncoder.encode("123"));
+        UserEntity customer = new UserEntity("Customer", "testuser@ica.se", bCryptPasswordEncoder.encode("123"));
+        UserEntity employee = new UserEntity("Employee", "employee@ica.se", bCryptPasswordEncoder.encode("123"));
+
+        admin.setRole(roleRepository.findByName("ADMIN"));
+        addUser(customer);
+        employee.setDepartment(frukt);
+
         roleRepository.save(new RoleEntity("ADMIN"));
         roleRepository.save(new RoleEntity("CUSTOMER"));
-        UserEntity admin = new UserEntity("Admin", "admin@admin.se", bCryptPasswordEncoder.encode("123"));
-        admin.setRole(roleRepository.findByName("ADMIN"));
+        departmentRepository.save(frukt);
+        itemRepository.save(new Item("Citron", 10));
+        itemRepository.save(new Item("Banan", 29));
         userRepository.save(admin);
+        userRepository.save(customer);
+        userRepository.save(employee);
     }
 
     public Optional<UserEntity> updateUserRole(Long id, String roleName) {
@@ -74,7 +87,7 @@ public class UserService {
     public Optional<UserEntity> updateUser(Long id, Optional<UserEntity> userEntity) {
         Optional<UserEntity> foundUser = userRepository.findById(id);
 
-        if(foundUser.isPresent()) {
+        if (foundUser.isPresent()) {
             setFields(userEntity, foundUser);
         } else {
             throw new RuntimeException("Could not find");
@@ -90,13 +103,13 @@ public class UserService {
 
 
     private void setFields(Optional<UserEntity> userEntity, Optional<UserEntity> foundUser) {
-        if(!(userEntity.get().getUsername() == null)) {
+        if (!(userEntity.get().getUsername() == null)) {
             foundUser.get().setUsername(userEntity.get().getUsername());
         }
-        if(!(userEntity.get().getEmail() == null)) {
+        if (!(userEntity.get().getEmail() == null)) {
             foundUser.get().setEmail(userEntity.get().getEmail());
         }
-        if(!(userEntity.get().getPassword() == null)) {
+        if (!(userEntity.get().getPassword() == null)) {
             foundUser.get().setPassword(bCryptPasswordEncoder.encode(userEntity.get().getPassword()));
         }
     }

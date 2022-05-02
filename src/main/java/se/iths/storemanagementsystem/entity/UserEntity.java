@@ -14,18 +14,13 @@ public class UserEntity {
     private String username;
     private String email;
     private String password;
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Item> items = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private ShoppingCart shoppingCart;
     @ManyToOne(cascade = CascadeType.ALL)
     private RoleEntity role;
     @ManyToOne
     private Department department;
 
-
-
-    public void addItem(Item item) {
-        items.add(item);
-    }
 
     public UserEntity(String username, String email, String password) {
         this.username = username;
@@ -75,19 +70,19 @@ public class UserEntity {
         this.email = email;
     }
 
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-
     public RoleEntity getRole() {
         return role;
     }
 
     public void setRole(RoleEntity role) {
         this.role = role;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 }

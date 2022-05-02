@@ -25,14 +25,6 @@ public class ShoppingCartService {
         return Optional.ofNullable(cart);
     }
 
-    public void deleteShoppingCart(Long id) {
-        Optional<ShoppingCart> foundCart = shoppingCartRepository.findById(id);
-        for(Item item : foundCart.get().getItems()) {
-            foundCart.get().removeItem(item);
-        }
-        foundCart.get().removeUser(foundCart.get().getUser());
-    }
-
     public Optional<ShoppingCart> findShoppingCartById(Long id) {
         return Optional.ofNullable(shoppingCartRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }

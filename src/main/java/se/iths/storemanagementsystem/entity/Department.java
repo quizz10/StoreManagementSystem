@@ -3,6 +3,7 @@ package se.iths.storemanagementsystem.entity;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Department {

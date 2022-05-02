@@ -80,7 +80,7 @@ public class UserService {
         if(foundUser.isPresent()) {
             setFields(userEntity, foundUser);
         } else {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new RuntimeException("Could not find");
         }
         userRepository.save(foundUser.get());
         return foundUser;

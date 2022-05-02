@@ -5,7 +5,6 @@ import se.iths.storemanagementsystem.entity.Item;
 import se.iths.storemanagementsystem.repository.ItemRepository;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Optional;
 
 @Service

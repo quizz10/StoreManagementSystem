@@ -4,14 +4,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.iths.storemanagementsystem.entity.RoleEntity;
 import se.iths.storemanagementsystem.entity.UserEntity;
-//import se.iths.storemanagementsystem.entity.ShoppingCart;
 import se.iths.storemanagementsystem.repository.RoleRepository;
 import se.iths.storemanagementsystem.repository.ShoppingCartRepository;
 import se.iths.storemanagementsystem.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 @Service
@@ -48,7 +45,7 @@ public class UserService {
     public void addInitialAdmin() {
         roleRepository.save(new RoleEntity("ADMIN"));
         roleRepository.save(new RoleEntity("CUSTOMER"));
-        UserEntity admin = new UserEntity("Ante", "ante@ante.se", bCryptPasswordEncoder.encode("123"));
+        UserEntity admin = new UserEntity("Admin", "admin@admin.se", bCryptPasswordEncoder.encode("123"));
         admin.setRole(roleRepository.findByName("ADMIN"));
         userRepository.save(admin);
     }

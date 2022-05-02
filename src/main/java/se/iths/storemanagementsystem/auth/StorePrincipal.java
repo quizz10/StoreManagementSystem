@@ -8,8 +8,6 @@ import se.iths.storemanagementsystem.entity.UserEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 public class StorePrincipal implements UserDetails {
     private final UserEntity userEntity;

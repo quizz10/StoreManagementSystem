@@ -4,11 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.iths.storemanagementsystem.entity.Item;
-import se.iths.storemanagementsystem.repository.ItemRepository;
 import se.iths.storemanagementsystem.service.ItemService;
-import se.iths.storemanagementsystem.utils.JsonFormatter;
 
-import java.util.List;
 import java.util.Optional;
 
 

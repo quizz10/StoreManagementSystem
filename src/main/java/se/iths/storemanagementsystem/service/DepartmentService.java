@@ -1,59 +1,76 @@
-//package se.iths.storemanagementsystem.service;
-//
-//import org.springframework.stereotype.Service;
-//import se.iths.storemanagementsystem.entity.Department;
-//import se.iths.storemanagementsystem.entity.Employee;
-//import se.iths.storemanagementsystem.repository.DepartmentRepository;
-//
-//import javax.persistence.EntityNotFoundException;
-//import java.util.List;
-//import java.util.Optional;
-//
-//@Service
-//public class DepartmentService {
-//
-//    private final DepartmentRepository departmentRepository;
-//
-//    public DepartmentService(DepartmentRepository departmentRepository) {
-//        this.departmentRepository = departmentRepository;
-//    }
-//
-//    public void addDepartment(Department department) {
-//        departmentRepository.save(department);
-//    }
-//
-//    public Optional<Department> findDepartmentById(Long id) {
-//        return Optional.ofNullable(departmentRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-//    }
-//
-//    public List<Department> getAllDepartments() {
-//        return departmentRepository.createQuery("SELECT d from Department d", Department.class).getResultList();
-//    }
-//
-//    public Department updateDepartment(Long id, String departmentName) {
-//        Department department = getDepartmentById(id);
-//        department.setDepartmentName(departmentName);
-//        return department;
-//    }
-//
-//    public void deleteDepartment(Long id) {
-//        departmentRepository.remove(.find(Department.class, id));
-//    }
-//
-//    public Employee linkEmployeeToDepartment(Long id, String email) {
-//
-//        Department department = getDepartmentById(id);
-//        Employee employee = (Employee) .createQuery("Select e from Employee e where e.email = :email")
-//                .setParameter("email", email).getSingleResult();
-//        department.addEmployee(employee);
-//        return employee;
-//    }
-//
-//    public Employee unlinkEmployeeToDepartment(Long id, String email) {
-//        Department department = getDepartmentById(id);
-//        Employee employee = (Employee) .createQuery("Select e from Employee e where e.email = :email")
-//                .setParameter("email", email).getSingleResult();
-//        department.removeEmployee(employee);
-//        return employee;
-//    }
-//}
+package se.iths.storemanagementsystem.service;
+
+import org.springframework.stereotype.Service;
+import se.iths.storemanagementsystem.entity.Department;
+import se.iths.storemanagementsystem.entity.UserEntity;
+import se.iths.storemanagementsystem.repository.DepartmentRepository;
+import se.iths.storemanagementsystem.repository.UserRepository;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
+
+@Service
+public class DepartmentService {
+
+    private final DepartmentRepository departmentRepository;
+    private final UserRepository userRepository;
+
+    public DepartmentService(DepartmentRepository departmentRepository, UserRepository userRepository) {
+        this.departmentRepository = departmentRepository;
+        this.userRepository = userRepository;
+    }
+
+    public void addDepartment(Department department) {
+        departmentRepository.save(department);
+    }
+
+    public Optional<Department> findDepartmentById(Long id) {
+        return Optional.ofNullable(departmentRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+    }
+
+    public Iterable<Department> getAllDepartments() {
+        return departmentRepository.findAll();
+    }
+
+    public Optional<Department> updateDepartment(Long id, String departmentName) {
+        Optional<Department> foundDepartment = departmentRepository.findById(id);
+
+        if(foundDepartment.isPresent()){
+            setFields(departmentName, foundDepartment);
+        } else {
+            throw new RuntimeException("Could not find");
+        }
+        departmentRepository.save(foundDepartment.get());
+        return foundDepartment;
+    }
+
+    public void deleteDepartment(Long id) {
+        Optional<Department> foundDepartment = findDepartmentById(id);
+        departmentRepository.delete(foundDepartment.get());
+    }
+
+    public Optional<UserEntity> linkEmployeeToDepartment(Long departmentId, Long userId) {
+
+        Optional<Department> foundDepartment = findDepartmentById(departmentId);
+        Optional<UserEntity> foundUser = findUserById(userId);
+        foundDepartment.get().addEmployee(foundUser.get());
+        return foundUser;
+    }
+
+    public Optional<UserEntity> findUserById(Long id) {
+        return Optional.ofNullable(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+    }
+
+    public Optional<UserEntity> unlinkEmployeeToDepartment(Long departmentId, Long userId) {
+        Optional<Department> foundDepartment = findDepartmentById(departmentId);
+        Optional<UserEntity> foundUser = findUserById(userId);
+        foundDepartment.get().removeEmployee(foundUser.get());
+        return foundUser;
+    }
+
+    private void setFields(String departmentName, Optional<Department> foundDepartment) {
+        if(!(departmentName == null)) {
+            foundDepartment.get().setDepartmentName(departmentName);
+        }
+    }
+}

@@ -14,7 +14,7 @@ public class Department {
     private String departmentName;
 
     @OneToMany
-    private List<Employee> employeeList;
+    private List<UserEntity> employeeList;
 
     @ManyToOne
     private Store store;
@@ -48,16 +48,16 @@ public class Department {
         this.departmentName = departmentName;
     }
 
-    public List<Employee> getEmployeeList() {
+    public List<UserEntity> getEmployeeList() {
         return employeeList;
     }
 
-    public void addEmployee(Employee employee) {
+    public void addEmployee(UserEntity employee) {
         employeeList.add(employee);
         employee.setDepartment(this);
     }
 
-    public void removeEmployee(Employee employee) {
+    public void removeEmployee(UserEntity employee) {
         employeeList.remove(employee);
     }
 

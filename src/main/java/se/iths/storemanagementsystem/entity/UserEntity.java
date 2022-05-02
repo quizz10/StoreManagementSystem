@@ -18,6 +18,8 @@ public class UserEntity {
     private List<Item> items = new ArrayList<>();
     @ManyToOne(cascade = CascadeType.ALL)
     private RoleEntity role;
+    @ManyToOne
+    private Department department;
 
 
 
@@ -32,6 +34,14 @@ public class UserEntity {
     }
 
     public UserEntity() {}
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
     public String getPassword() {
         return password;

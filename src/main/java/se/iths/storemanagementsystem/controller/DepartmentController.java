@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.iths.storemanagementsystem.entity.Department;
-import se.iths.storemanagementsystem.entity.Employee;
+import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.service.DepartmentService;
 import se.iths.storemanagementsystem.utils.JsonFormatter;
 
@@ -22,8 +22,8 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Optional<Department>> createDepartment(Department department) {
-            departmentService.addDepartment(department);
+    public ResponseEntity<Optional<Department>> createDepartment(@RequestBody Optional<Department> department) {
+            departmentService.addDepartment(department.get());
 
         return new ResponseEntity<>(department, HttpStatus.CREATED);
     }
@@ -48,7 +48,7 @@ public class DepartmentController {
     @PatchMapping("{id}")
     public ResponseEntity<Optional<Department>> updateDepartmentName(@PathVariable("id") Long id, Department department ) {
       //  notFoundError(id);
-        Department updateDepartment = departmentService.updateDepartment(id, department.getDepartmentName());
+        Optional<Department> updateDepartment = departmentService.updateDepartment(id, department.getDepartmentName());
         return new ResponseEntity<>(updateDepartment, HttpStatus.OK);
     }
 
@@ -59,18 +59,18 @@ public class DepartmentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-@PatchMapping("linkemployee/{id}")
-    public ResponseEntity<Optional<Department>> linkEmployeeToDepartment(@PathVariable("id") Long id, @RequestParam("email")String email) {
+@PatchMapping("linkemployee/{departmentid}/{userid}")
+    public ResponseEntity<Optional<UserEntity>> linkEmployeeToDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("userid") Long userId) {
        // notFoundError(id);
-        Employee connectedEmployee = departmentService.linkEmployeeToDepartment(id, email);
+        Optional<UserEntity> connectedEmployee = departmentService.linkEmployeeToDepartment(departmentId, userId);
 
         return new ResponseEntity<>(connectedEmployee, HttpStatus.OK);
     }
 
-@PatchMapping("unlinkemployee/{id}")
-    public ResponseEntity<Optional<Department>> unlinkEmployeeToDepartment(@PathVariable("id")Long id, @RequestParam("email")String email) {
+@PatchMapping("unlinkemployee/{departmentid}/{userid}")
+    public ResponseEntity<Optional<UserEntity>> unlinkEmployeeToDepartment(@PathVariable("departmentid")Long departmentId, @PathVariable("userid") Long userId) {
        // notFoundError(id);
-        Employee connectedEmployee = departmentService.unlinkEmployeeToDepartment(id, email);
+        Optional<UserEntity> connectedEmployee = departmentService.unlinkEmployeeToDepartment(departmentId, userId);
 
         return new ResponseEntity<>(connectedEmployee, HttpStatus.OK);
     }

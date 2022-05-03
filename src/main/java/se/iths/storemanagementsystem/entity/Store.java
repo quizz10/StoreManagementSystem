@@ -1,6 +1,9 @@
 package se.iths.storemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,9 +14,9 @@ public class Store {
 
     private String storeName;
 
-    @OneToMany
-    private List<Department> departmentList;
-
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JsonManagedReference
+    private List<Department> departmentList = new ArrayList<>();
 
     public Store() {
     }
@@ -24,6 +27,16 @@ public class Store {
 
     public void setDepartmentList(List<Department> departmentList) {
         this.departmentList = departmentList;
+    }
+
+    public void addDepartment(Department department) {
+        departmentList.add(department);
+        department.setStore(this);
+    }
+
+    public void removeDepartment(Department department) {
+        departmentList.remove(department);
+        department.setStore(null);
     }
 
     public Store(String storeName) {

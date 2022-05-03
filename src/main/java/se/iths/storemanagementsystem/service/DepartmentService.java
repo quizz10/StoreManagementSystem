@@ -3,9 +3,11 @@ package se.iths.storemanagementsystem.service;
 import org.springframework.stereotype.Service;
 import se.iths.storemanagementsystem.entity.Department;
 import se.iths.storemanagementsystem.entity.Item;
+import se.iths.storemanagementsystem.entity.Store;
 import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.repository.DepartmentRepository;
 import se.iths.storemanagementsystem.repository.ItemRepository;
+import se.iths.storemanagementsystem.repository.StoreRepository;
 import se.iths.storemanagementsystem.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -50,12 +52,25 @@ public class DepartmentService {
 
     public void deleteDepartment(Long id) {
         Optional<Department> foundDepartment = findDepartmentById(id);
+        Store store = foundDepartment.get().getStore();
+        store.removeDepartment(foundDepartment.get());
+        for(UserEntity user : foundDepartment.get().getEmployeeList()) {
+            user.setDepartment(null);
+        }
+        foundDepartment.get().setEmployeeList(null);
+        for(Item item : foundDepartment.get().getItemList()) {
+            item.setDepartment(null);
+        }
+
+        foundDepartment.get().setItemList(null);
         departmentRepository.delete(foundDepartment.get());
+
     }
 
     public Optional<UserEntity> findUserById(Long id) {
         return Optional.ofNullable(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
+
 
     public Optional<UserEntity> linkEmployeeToDepartment(Long departmentId, Long userId) {
 
@@ -72,6 +87,7 @@ public class DepartmentService {
         Optional<Department> foundDepartment = findDepartmentById(departmentId);
         Optional<UserEntity> foundUser = findUserById(userId);
         foundDepartment.get().removeEmployee(foundUser.get());
+        departmentRepository.save(foundDepartment.get());
         return foundUser;
     }
 

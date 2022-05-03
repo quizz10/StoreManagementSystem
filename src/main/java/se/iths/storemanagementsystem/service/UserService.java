@@ -50,6 +50,8 @@ public class UserService {
         UserEntity admin = new UserEntity("Admin", "admin@admin.se", bCryptPasswordEncoder.encode("123"));
         UserEntity customer = new UserEntity("Customer", "testuser@ica.se", bCryptPasswordEncoder.encode("123"));
         UserEntity employee = new UserEntity("Employee", "employee@ica.se", bCryptPasswordEncoder.encode("123"));
+        Item citron = new Item("Citron", 10);
+        Item banan = new Item("Banan", 29);
 
         roleRepository.save(new RoleEntity("ADMIN"));
         roleRepository.save(new RoleEntity("CUSTOMER"));
@@ -58,12 +60,14 @@ public class UserService {
         employee.setRole(employeeRole);
         admin.setRole(roleRepository.findByName("ADMIN"));
         addUser(customer);
-
+        store.addDepartment(frukt);
         frukt.addEmployee(employee);
+        frukt.addItem(citron);
+        frukt.addItem(banan);
         storeRepository.save(store);
         departmentRepository.save(frukt);
-        itemRepository.save(new Item("Citron", 10));
-        itemRepository.save(new Item("Banan", 29));
+        itemRepository.save(citron);
+        itemRepository.save(banan);
         userRepository.save(admin);
         userRepository.save(employee);
     }

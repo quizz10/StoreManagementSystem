@@ -1,5 +1,6 @@
 package se.iths.storemanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -15,14 +16,14 @@ public class Department {
 
     private String departmentName;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<UserEntity> employeeList = new ArrayList<>();
 
     @ManyToOne
-    @Transient
+    @JsonBackReference
     private Store store;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Item> itemList = new ArrayList<>();
 
     public void addItem (Item item){
@@ -42,7 +43,6 @@ public class Department {
         this.departmentName = departmentName;
     }
 
-    @JsonIgnore
     public Store getStore() {
         return store;
     }
@@ -73,6 +73,10 @@ public class Department {
 
     public List<UserEntity> getEmployeeList() {
         return employeeList;
+    }
+
+    public void setEmployeeList(List<UserEntity> employeeList) {
+        this.employeeList = employeeList;
     }
 
     public void addEmployee(UserEntity employee) {

@@ -80,8 +80,7 @@ public class UserService {
             //Todo: Add custom exception for null role ^
         }
         foundUser.get().setRole(role);
-
-
+        userRepository.save(foundUser.get());
         return Optional.ofNullable(foundUser).orElseThrow(EntityNotFoundException::new);
     }
 

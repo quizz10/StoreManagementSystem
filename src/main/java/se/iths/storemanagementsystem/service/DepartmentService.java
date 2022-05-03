@@ -103,7 +103,7 @@ public class DepartmentService {
         Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
 
         foundDepartment.get().addItem(foundItem.get());
-
+        departmentRepository.save(foundDepartment.get());
         return foundDepartment;
     }
 
@@ -112,7 +112,7 @@ public class DepartmentService {
         Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
 
         foundDepartment.get().removeItem(foundItem.get());
-
+        departmentRepository.save(foundDepartment.get());
         return foundDepartment;
     }
 }

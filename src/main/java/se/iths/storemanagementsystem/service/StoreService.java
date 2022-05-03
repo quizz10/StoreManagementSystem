@@ -54,24 +54,24 @@ public class StoreService {
     }
 
 
-    public Optional<StoreEntity> linkDepartment(Long storeId, Long departmentId) {
+    public Optional<StoreEntity> linkDepartmentToStore(Long storeId, Long departmentId) {
         Optional<StoreEntity> foundStore = storeRepository.findById(storeId);
         Optional<DepartmentEntity> foundDepartment = departmentRepository.findById(departmentId);
 
         foundDepartment.get().setStore(foundStore.get());
         foundStore.get().getDepartmentList().add(foundDepartment.get());
-
+        storeRepository.save(foundStore.get());
         return foundStore;
     }
 
 
-    public Optional<StoreEntity> unlinkDepartment(Long storeId, Long departmentId) {
+    public Optional<StoreEntity> unlinkDepartmentFromStore(Long storeId, Long departmentId) {
         Optional<StoreEntity> foundStore = storeRepository.findById(storeId);
         Optional<DepartmentEntity> foundDepartment = departmentRepository.findById(departmentId);
 
         foundStore.get().getDepartmentList().remove(foundDepartment.get());
         foundDepartment.get().setStore(null);
-
+        storeRepository.save(foundStore.get());
         return foundStore;
     }
 }

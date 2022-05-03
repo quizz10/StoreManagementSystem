@@ -60,18 +60,18 @@ public class StoreController {
 
 
     @PatchMapping("link/{storeId}/{departmentId}")
-    public ResponseEntity<Optional<StoreEntity>> linkStoreToDepartment(@PathVariable("storeId") Long storeId, @PathVariable("departmentId") Long departmentId) {
+    public ResponseEntity<Optional<StoreEntity>> linkDepartmentToStore(@PathVariable("storeId") Long storeId, @PathVariable("departmentId") Long departmentId) {
 
-        Optional<StoreEntity> store = storeService.linkDepartment(storeId, departmentId);
+        Optional<StoreEntity> store = storeService.linkDepartmentToStore(storeId, departmentId);
 
         return new ResponseEntity<>(store, HttpStatus.OK);
     }
 
 
     @PatchMapping("unlink/{storeId}/{departmentId}")
-    public ResponseEntity<Optional<StoreEntity>> unlinkStoreFromDepartment(@PathVariable("storeId") Long storeId, @PathVariable("departmentId") Long departmentId) {
+    public ResponseEntity<Optional<StoreEntity>> unlinkDepartmentFromStore(@PathVariable("storeId") Long storeId, @PathVariable("departmentId") Long departmentId) {
 
-        Optional<StoreEntity> store = storeService.unlinkDepartment(storeId, departmentId);
+        Optional<StoreEntity> store = storeService.unlinkDepartmentFromStore(storeId, departmentId);
 
         return new ResponseEntity<>(store, HttpStatus.OK);
     }

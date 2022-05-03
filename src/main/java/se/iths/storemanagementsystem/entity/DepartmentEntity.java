@@ -1,14 +1,13 @@
 package se.iths.storemanagementsystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Department {
+public class DepartmentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,41 +20,41 @@ public class Department {
 
     @ManyToOne
     @JsonBackReference
-    private Store store;
+    private StoreEntity store;
 
     @OneToMany(cascade = CascadeType.PERSIST)
-    private List<Item> itemList = new ArrayList<>();
+    private List<ItemEntity> itemList = new ArrayList<>();
 
-    public void addItem (Item item){
+    public void addItem (ItemEntity item){
         itemList.add(item);
         item.setDepartment(this);
     }
 
-    public void removeItem(Item item){
+    public void removeItem(ItemEntity item){
         itemList.remove(item);
         item.setDepartment(null);
     }
 
-    public Department() {
+    public DepartmentEntity() {
     }
 
-    public Department(String departmentName) {
+    public DepartmentEntity(String departmentName) {
         this.departmentName = departmentName;
     }
 
-    public Store getStore() {
+    public StoreEntity getStore() {
         return store;
     }
 
-    public void setStore(Store store) {
+    public void setStore(StoreEntity store) {
         this.store = store;
     }
 
-    public List<Item> getItemList() {
+    public List<ItemEntity> getItemList() {
         return itemList;
     }
 
-    public void setItemList(List<Item> itemList) {
+    public void setItemList(List<ItemEntity> itemList) {
         this.itemList = itemList;
     }
 

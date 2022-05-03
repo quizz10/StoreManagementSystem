@@ -36,7 +36,7 @@ public class UserService {
         RoleEntity role = roleRepository.findByName("CUSTOMER");
         userEntity.setRole(role);
 
-        ShoppingCart shoppingCart = new ShoppingCart();
+        ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
         userEntity.setShoppingCart(shoppingCart);
         shoppingCart.setUser(userEntity);
         shoppingCartRepository.save(shoppingCart);
@@ -45,13 +45,13 @@ public class UserService {
 
     // Method for adding an admin and setting up admin+customer roles, is run only once.
     public void addInitialAdmin() {
-        Store store = new Store("ICA");
-        Department frukt = new Department("Frukt & Grönt");
+        StoreEntity store = new StoreEntity("ICA");
+        DepartmentEntity frukt = new DepartmentEntity("Frukt & Grönt");
         UserEntity admin = new UserEntity("Admin", "admin@admin.se", bCryptPasswordEncoder.encode("123"));
         UserEntity customer = new UserEntity("Customer", "testuser@ica.se", bCryptPasswordEncoder.encode("123"));
         UserEntity employee = new UserEntity("Employee", "employee@ica.se", bCryptPasswordEncoder.encode("123"));
-        Item citron = new Item("Citron", 10);
-        Item banan = new Item("Banan", 29);
+        ItemEntity citron = new ItemEntity("Citron", 10);
+        ItemEntity banan = new ItemEntity("Banan", 29);
 
         roleRepository.save(new RoleEntity("ADMIN"));
         roleRepository.save(new RoleEntity("CUSTOMER"));

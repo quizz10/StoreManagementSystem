@@ -1,13 +1,12 @@
 package se.iths.storemanagementsystem.service;
 
 import org.springframework.stereotype.Service;
-import se.iths.storemanagementsystem.entity.Department;
-import se.iths.storemanagementsystem.entity.Item;
-import se.iths.storemanagementsystem.entity.Store;
+import se.iths.storemanagementsystem.entity.DepartmentEntity;
+import se.iths.storemanagementsystem.entity.ItemEntity;
+import se.iths.storemanagementsystem.entity.StoreEntity;
 import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.repository.DepartmentRepository;
 import se.iths.storemanagementsystem.repository.ItemRepository;
-import se.iths.storemanagementsystem.repository.StoreRepository;
 import se.iths.storemanagementsystem.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,20 +25,20 @@ public class DepartmentService {
         this.itemRepository = itemRepository;
     }
 
-    public void addDepartment(Department department) {
+    public void addDepartment(DepartmentEntity department) {
         departmentRepository.save(department);
     }
 
-    public Optional<Department> findDepartmentById(Long id) {
+    public Optional<DepartmentEntity> findDepartmentById(Long id) {
         return Optional.ofNullable(departmentRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public Iterable<Department> getAllDepartments() {
+    public Iterable<DepartmentEntity> getAllDepartments() {
         return departmentRepository.findAll();
     }
 
-    public Optional<Department> updateDepartment(Long id, String departmentName) {
-        Optional<Department> foundDepartment = departmentRepository.findById(id);
+    public Optional<DepartmentEntity> updateDepartment(Long id, String departmentName) {
+        Optional<DepartmentEntity> foundDepartment = departmentRepository.findById(id);
 
         if (foundDepartment.isPresent()) {
             setFields(departmentName, foundDepartment);
@@ -51,14 +50,14 @@ public class DepartmentService {
     }
 
     public void deleteDepartment(Long id) {
-        Optional<Department> foundDepartment = findDepartmentById(id);
-        Store store = foundDepartment.get().getStore();
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(id);
+        StoreEntity store = foundDepartment.get().getStore();
         store.removeDepartment(foundDepartment.get());
         for(UserEntity user : foundDepartment.get().getEmployeeList()) {
             user.setDepartment(null);
         }
         foundDepartment.get().setEmployeeList(null);
-        for(Item item : foundDepartment.get().getItemList()) {
+        for(ItemEntity item : foundDepartment.get().getItemList()) {
             item.setDepartment(null);
         }
 
@@ -74,7 +73,7 @@ public class DepartmentService {
 
     public Optional<UserEntity> linkEmployeeToDepartment(Long departmentId, Long userId) {
 
-        Optional<Department> foundDepartment = findDepartmentById(departmentId);
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
         Optional<UserEntity> foundUser = findUserById(userId);
         if (foundUser.get().getRole().getName().equals("EMPLOYEE")) {
             foundDepartment.get().addEmployee(foundUser.get());
@@ -84,31 +83,31 @@ public class DepartmentService {
     }
 
     public Optional<UserEntity> unlinkEmployeeToDepartment(Long departmentId, Long userId) {
-        Optional<Department> foundDepartment = findDepartmentById(departmentId);
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
         Optional<UserEntity> foundUser = findUserById(userId);
         foundDepartment.get().removeEmployee(foundUser.get());
         departmentRepository.save(foundDepartment.get());
         return foundUser;
     }
 
-    private void setFields(String departmentName, Optional<Department> foundDepartment) {
+    private void setFields(String departmentName, Optional<DepartmentEntity> foundDepartment) {
         if (!(departmentName == null)) {
             foundDepartment.get().setDepartmentName(departmentName);
         }
     }
 
-    public Optional<Department> linkItemToDepartment(Long departmentId, Long itemId) {
-        Optional<Department> foundDepartment = findDepartmentById(departmentId);
-        Optional<Item> foundItem = itemRepository.findById(itemId);
+    public Optional<DepartmentEntity> linkItemToDepartment(Long departmentId, Long itemId) {
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
+        Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
 
         foundDepartment.get().addItem(foundItem.get());
 
         return foundDepartment;
     }
 
-    public Optional<Department> unLinkItemFromDepartment(Long departmentId, Long itemId) {
-        Optional<Department> foundDepartment = findDepartmentById(departmentId);
-        Optional<Item> foundItem = itemRepository.findById(itemId);
+    public Optional<DepartmentEntity> unLinkItemFromDepartment(Long departmentId, Long itemId) {
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
+        Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
 
         foundDepartment.get().removeItem(foundItem.get());
 

@@ -1,8 +1,8 @@
 package se.iths.storemanagementsystem.service;
 
 import org.springframework.stereotype.Service;
-import se.iths.storemanagementsystem.entity.Department;
-import se.iths.storemanagementsystem.entity.Store;
+import se.iths.storemanagementsystem.entity.DepartmentEntity;
+import se.iths.storemanagementsystem.entity.StoreEntity;
 import se.iths.storemanagementsystem.repository.DepartmentRepository;
 import se.iths.storemanagementsystem.repository.StoreRepository;
 
@@ -21,38 +21,42 @@ public class StoreService {
         this.departmentRepository = departmentRepository;
     }
 
-    public void addStore(Store store) {
+    public void addStore(StoreEntity store) {
         storeRepository.save(store);
     }
 
-    public Optional<Store> findStoreById(Long id) {
+    public Optional<StoreEntity> findStoreById(Long id) {
         return Optional.ofNullable(storeRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public Optional<Department> findDepartmentById(Long id) {
+    public Optional<DepartmentEntity> findDepartmentById(Long id) {
         return Optional.ofNullable(departmentRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public List<Store> getAllStores() {
-        List<Store> stores = storeRepository.findAll();
+    public List<StoreEntity> getAllStores() {
+        List<StoreEntity> stores = storeRepository.findAll();
         return stores;
     }
 
-    public Store updateStore(Long id, Store store) {
-        Optional<Store> foundStore = storeRepository.findById(id);
-        foundStore.get().setStoreName(store.getStoreName());
+    public StoreEntity updateStore(Long id, StoreEntity store) {
+        Optional<StoreEntity> foundStore = storeRepository.findById(id);
+        if (store.getStoreName() != null) {
+            foundStore.get().setStoreName(store.getStoreName());
+            storeRepository.save(foundStore.get());
+        }
         return foundStore.get();
     }
 
     public void deleteStore(Long id) {
-        Optional<Store> foundStore = storeRepository.findById(id);
+        Optional<StoreEntity> foundStore = storeRepository.findById(id);
         storeRepository.delete(foundStore.get());
+        //TODO fix this!!!!!!!!!!!
     }
 
 
-    public Optional<Store> linkDepartment(Long storeId, Long departmentId) {
-        Optional<Store> foundStore = storeRepository.findById(storeId);
-        Optional<Department> foundDepartment = departmentRepository.findById(departmentId);
+    public Optional<StoreEntity> linkDepartment(Long storeId, Long departmentId) {
+        Optional<StoreEntity> foundStore = storeRepository.findById(storeId);
+        Optional<DepartmentEntity> foundDepartment = departmentRepository.findById(departmentId);
 
         foundDepartment.get().setStore(foundStore.get());
         foundStore.get().getDepartmentList().add(foundDepartment.get());
@@ -61,9 +65,9 @@ public class StoreService {
     }
 
 
-    public Optional<Store> unlinkDepartment(Long storeId, Long departmentId) {
-        Optional<Store> foundStore = storeRepository.findById(storeId);
-        Optional<Department> foundDepartment = departmentRepository.findById(departmentId);
+    public Optional<StoreEntity> unlinkDepartment(Long storeId, Long departmentId) {
+        Optional<StoreEntity> foundStore = storeRepository.findById(storeId);
+        Optional<DepartmentEntity> foundDepartment = departmentRepository.findById(departmentId);
 
         foundStore.get().getDepartmentList().remove(foundDepartment.get());
         foundDepartment.get().setStore(null);

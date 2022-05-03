@@ -3,7 +3,7 @@ package se.iths.storemanagementsystem.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.iths.storemanagementsystem.entity.Item;
+import se.iths.storemanagementsystem.entity.ItemEntity;
 import se.iths.storemanagementsystem.service.ItemService;
 
 import java.util.Optional;
@@ -20,37 +20,37 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody Item item) {
+    public ResponseEntity<ItemEntity> createItem(@RequestBody ItemEntity item) {
         itemService.addItem(item);
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Optional<Item>> getItemById(@PathVariable("id") Long id) {
+    public ResponseEntity<Optional<ItemEntity>> getItemById(@PathVariable("id") Long id) {
       //  notFoundError(id); // byta till spring-kompatibel
-        Optional<Item> foundItem = itemService.findItemById(id);
+        Optional<ItemEntity> foundItem = itemService.findItemById(id);
         return new ResponseEntity<>(foundItem, HttpStatus.OK);
     }
 
 
       @GetMapping
-      public ResponseEntity<Iterable<Item>> getAllItems() {
-          Iterable<Item> foundItems = itemService.getAllItems();
+      public ResponseEntity<Iterable<ItemEntity>> getAllItems() {
+          Iterable<ItemEntity> foundItems = itemService.getAllItems();
           if (foundItems == null) {
               return new ResponseEntity<>(HttpStatus.NO_CONTENT);
           }
           return new ResponseEntity<>(foundItems, HttpStatus.OK);
       }
 
-    @PatchMapping
-    public ResponseEntity<Optional<Item>> updateItem(@PathVariable("id") Long id, @RequestBody Optional<Item> item) {
+    @PatchMapping("{id}")
+    public ResponseEntity<Optional<ItemEntity>> updateItem(@PathVariable("id") Long id, @RequestBody Optional<ItemEntity> item) {
         // notFoundError(id);
         item = itemService.updateItem(id, item);
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Optional<Item>> deleteItem(@PathVariable("id") Long id) {
+    public ResponseEntity<Optional<ItemEntity>> deleteItem(@PathVariable("id") Long id) {
             itemService.deleteItem(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

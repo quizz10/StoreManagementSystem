@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 
 @Entity
-public class Item {
+public class ItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,17 +17,17 @@ public class Item {
     private double price;
 
     @ManyToOne
-    private Department department;
+    private DepartmentEntity department;
 
-    public Item() {
+    public ItemEntity() {
     }
 
-    public Item(String name, double price) {
+    public ItemEntity(String name, double price) {
         this.name = name;
         this.price = price;
     }
 
-    public Item(String name, double price, Department department) {
+    public ItemEntity(String name, double price, DepartmentEntity department) {
         this.name = name;
         this.price = price;
         this.department = department;
@@ -58,11 +58,11 @@ public class Item {
     }
 
     @JsonIgnore
-    public Department getDepartment() {
+    public DepartmentEntity getDepartment() {
         return department;
     }
 
-    public void setDepartment(Department department) {
+    public void setDepartment(DepartmentEntity department) {
         this.department = department;
     }
 }

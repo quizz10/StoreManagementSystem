@@ -14,12 +14,12 @@ public class UserEntity {
     private String email;
     private String password;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private ShoppingCart shoppingCart;
+    private ShoppingCartEntity shoppingCart;
     @ManyToOne(cascade = CascadeType.ALL)
     private RoleEntity role;
     @ManyToOne(cascade = CascadeType.ALL)
 //    @Transient
-    private Department department;
+    private DepartmentEntity department;
 
 
     public UserEntity(String username, String email, String password) {
@@ -31,11 +31,11 @@ public class UserEntity {
     public UserEntity() {}
 
     @JsonIgnore
-    public Department getDepartment() {
+    public DepartmentEntity getDepartment() {
         return department;
     }
 
-    public void setDepartment(Department department) {
+    public void setDepartment(DepartmentEntity department) {
         this.department = department;
     }
 
@@ -79,11 +79,11 @@ public class UserEntity {
         this.role = role;
     }
 
-    public ShoppingCart getShoppingCart() {
+    public ShoppingCartEntity getShoppingCart() {
         return shoppingCart;
     }
 
-    public void setShoppingCart(ShoppingCart shoppingCart) {
+    public void setShoppingCart(ShoppingCartEntity shoppingCart) {
         this.shoppingCart = shoppingCart;
     }
 }

@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class ShoppingCart {
+public class ShoppingCartEntity {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id;
@@ -14,23 +14,24 @@ public class ShoppingCart {
     private double totalPrice;
 
     @ManyToMany
-    Set<Item> items = new HashSet<>();
+    Set<ItemEntity> items = new HashSet<>();
 
     @Transient
     @OneToOne(cascade = CascadeType.ALL)
     private UserEntity user;
 
 
-    public ShoppingCart(){
+    public ShoppingCartEntity(){
 
     }
 
-    public void addItem(Optional<Item> item){
+    public void addItem(Optional<ItemEntity> item){
         items.add(item.get());
     }
+    //TODO om vi pallar. Fixa så man kan ha fler av samma vara.....
 
-    public void removeItem(Item item){
-        items.remove(item);
+    public void removeItem(Optional<ItemEntity> item){
+        items.remove(item.get());
     }
     
     public void setUser(UserEntity user) {
@@ -51,7 +52,7 @@ public class ShoppingCart {
         this.totalPrice = totalPrice;
     }
 
-    public Set<Item> getItems() {
+    public Set<ItemEntity> getItems() {
         return items;
     }
 

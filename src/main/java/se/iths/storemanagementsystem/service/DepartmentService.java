@@ -52,7 +52,9 @@ public class DepartmentService {
     public void deleteDepartment(Long id) {
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(id);
         StoreEntity store = foundDepartment.get().getStore();
-        store.removeDepartment(foundDepartment.get());
+        if (store != null) {
+            store.removeDepartment(foundDepartment.get());
+        }
         for(UserEntity user : foundDepartment.get().getEmployeeList()) {
             user.setDepartment(null);
         }

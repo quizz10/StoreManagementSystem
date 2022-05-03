@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import se.iths.storemanagementsystem.entity.DepartmentEntity;
 import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.service.DepartmentService;
+import se.iths.storemanagementsystem.utils.JsonFormatter;
 
 import java.util.Optional;
 
@@ -74,13 +75,14 @@ public class DepartmentController {
         return new ResponseEntity<>(connectedEmployee, HttpStatus.OK);
     }
 
+    //TODO: Bestämma sig för om vi ska returnera vår jsonformatter eller skicka tillbaka objektet.
     @PatchMapping("linkitem/{departmentid}/{itemid}")
-    public ResponseEntity<Optional<DepartmentEntity>> linkItemToDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("itemid") Long itemId) {
+    public ResponseEntity linkItemToDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("itemid") Long itemId) {
         Optional<DepartmentEntity> department = departmentService.linkItemToDepartment(departmentId, itemId);
 
-        return new ResponseEntity<>(department, HttpStatus.OK);
+        return new ResponseEntity<>(new JsonFormatter(HttpStatus.OK.value(), "Successfully linked item with id " + itemId + " to department with id " + departmentId), HttpStatus.OK);
     }
-
+    //TODO: Bestämma sig för om vi ska returnera vår jsonformatter eller skicka tillbaka objektet.
     @PatchMapping("unlinkitem/{departmentid}/{itemid}")
     public ResponseEntity<Optional<DepartmentEntity>> unLinkItemFromDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("itemid") Long itemId) {
         Optional<DepartmentEntity> department = departmentService.unLinkItemFromDepartment(departmentId, itemId);

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import se.iths.storemanagementsystem.entity.*;
 import se.iths.storemanagementsystem.repository.*;
 
+import javax.management.relation.Role;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
@@ -33,8 +34,8 @@ public class UserService {
 
     public void addUser(UserEntity userEntity) {
         userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
-        RoleEntity role = roleRepository.findByName("CUSTOMER");
-        userEntity.setRole(role);
+        RoleEntity role = roleRepository.findByName("ROLE_USER");
+        userEntity.addRole(role);
 
         ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
         userEntity.setShoppingCart(shoppingCart);
@@ -46,28 +47,35 @@ public class UserService {
     // Method for adding an admin and setting up admin+customer roles, is run only once.
     public void addInitialAdmin() {
         StoreEntity store = new StoreEntity("ICA");
+
         DepartmentEntity frukt = new DepartmentEntity("Frukt & Grönt");
-        UserEntity admin = new UserEntity("Admin", "admin@admin.se", bCryptPasswordEncoder.encode("123"));
-        UserEntity customer = new UserEntity("Customer", "testuser@ica.se", bCryptPasswordEncoder.encode("123"));
-        UserEntity employee = new UserEntity("Employee", "employee@ica.se", bCryptPasswordEncoder.encode("123"));
+
         ItemEntity citron = new ItemEntity("Citron", 10);
         ItemEntity banan = new ItemEntity("Banan", 29);
 
-        roleRepository.save(new RoleEntity("ADMIN"));
-        roleRepository.save(new RoleEntity("CUSTOMER"));
-        RoleEntity employeeRole = roleRepository.save(new RoleEntity("EMPLOYEE"));
+        UserEntity admin = new UserEntity("Admin", "admin@admin.se", bCryptPasswordEncoder.encode("123"));
+        UserEntity customer = new UserEntity("Customer", "testuser@ica.se", bCryptPasswordEncoder.encode("123"));
+        UserEntity employee = new UserEntity("Employee", "employee@ica.se", bCryptPasswordEncoder.encode("123"));
 
-        employee.setRole(employeeRole);
-        admin.setRole(roleRepository.findByName("ADMIN"));
-        addUser(customer);
+
+        roleRepository.save(new RoleEntity("ROLE_ADMIN"));
+        roleRepository.save(new RoleEntity("ROLE_USER"));
+        roleRepository.save(new RoleEntity("ROLE_EMPLOYEE"));
+
+        employee.addRole(roleRepository.findByName("ROLE_EMPLOYEE"));
+        admin.addRole(roleRepository.findByName("ROLE_ADMIN"));
+        customer.addRole(roleRepository.findByName("ROLE_USER"));
+
         store.addDepartment(frukt);
         frukt.addEmployee(employee);
         frukt.addItem(citron);
         frukt.addItem(banan);
+
         storeRepository.save(store);
         departmentRepository.save(frukt);
         itemRepository.save(citron);
         itemRepository.save(banan);
+        userRepository.save(customer);
         userRepository.save(admin);
         userRepository.save(employee);
     }
@@ -79,7 +87,7 @@ public class UserService {
             // throw new WebApplicationException()
             //Todo: Add custom exception for null role ^
         }
-        foundUser.get().setRole(role);
+        foundUser.get().addRole(role);
         userRepository.save(foundUser.get());
         return Optional.ofNullable(foundUser).orElseThrow(EntityNotFoundException::new);
     }
@@ -107,7 +115,12 @@ public class UserService {
     public void deleteUser(Long id) {
         Optional<UserEntity> foundCustomer = findUserById(id);
         foundCustomer.get().setShoppingCart(null);
-        foundCustomer.get().setRole(null);
+
+//        for (RoleEntity role : foundCustomer.get().getRoles()) {
+//            foundCustomer.get().removeRole(role);
+//        }
+        foundCustomer.get().setRoles(null);
+
         userRepository.delete(foundCustomer.get());
     }
 

@@ -77,7 +77,7 @@ public class DepartmentService {
 
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
         Optional<UserEntity> foundUser = findUserById(userId);
-        if (foundUser.get().getRole().getName().equals("EMPLOYEE")) {
+        if (foundUser.get().getRoles().contains("EMPLOYEE")) {
             foundDepartment.get().addEmployee(foundUser.get());
             departmentRepository.save(foundDepartment.get());
         }

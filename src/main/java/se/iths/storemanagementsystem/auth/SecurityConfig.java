@@ -2,6 +2,7 @@ package se.iths.storemanagementsystem.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,15 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(StoreUserDetailsService storeUserDetailsService) {
         this.storeUserDetailsService = storeUserDetailsService;
     }
-/*
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("user1").password(bCryptPasswordEncoder().encode("password")).roles("USER")
-                .and()
-                .withUser("admin").roles("ADMIN").password(bCryptPasswordEncoder().encode("password"));
-    }
-*/
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -47,11 +40,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/user/signup", "/user/setup").permitAll()
+                .antMatchers("/user/signup", "/user/setup").permitAll()
                 .antMatchers("/changerole", "/adminportal").hasRole("ADMIN")
+                .antMatchers("/user/admin/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                .antMatchers("/item/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
     }
-
 }

@@ -3,7 +3,8 @@ package se.iths.storemanagementsystem.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class RoleEntity {
@@ -12,8 +13,8 @@ public class RoleEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<UserEntity> users;
+    @ManyToMany(mappedBy = "roles")
+    private Set<UserEntity> users = new HashSet<>();
 
     public RoleEntity(String name) {
         this.name = name;
@@ -38,7 +39,7 @@ public class RoleEntity {
     }
 
     @JsonIgnore
-    public List<UserEntity> getUsers() {
+    public Set<UserEntity> getUsers() {
         return users;
     }
 

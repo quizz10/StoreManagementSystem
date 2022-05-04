@@ -3,6 +3,8 @@ package se.iths.storemanagementsystem.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class UserEntity {
@@ -15,8 +17,8 @@ public class UserEntity {
     private String password;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private ShoppingCartEntity shoppingCart;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private RoleEntity role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<RoleEntity> roles = new HashSet<>();
     @ManyToOne(cascade = CascadeType.ALL)
 //    @Transient
     private DepartmentEntity department;
@@ -71,12 +73,22 @@ public class UserEntity {
         this.email = email;
     }
 
-    public RoleEntity getRole() {
-        return role;
+    public Set<RoleEntity> getRoles() {
+        return roles;
     }
 
-    public void setRole(RoleEntity role) {
-        this.role = role;
+    public void setRoles(Set<RoleEntity> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(RoleEntity role) {
+        roles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(RoleEntity role) {
+        roles.remove(role);
+        role.getUsers().remove(this);
     }
 
     public ShoppingCartEntity getShoppingCart() {

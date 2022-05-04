@@ -9,7 +9,7 @@ import se.iths.storemanagementsystem.service.StoreService;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("store")
+@RequestMapping("admin")
 public class StoreController {
 
     StoreService storeService;
@@ -19,7 +19,7 @@ public class StoreController {
     }
 
 
-    @PostMapping
+    @PostMapping("store")
     public ResponseEntity<StoreEntity> createStore(@RequestBody StoreEntity store) {
         storeService.addStore(store);
         return new ResponseEntity<>(store, HttpStatus.CREATED);
@@ -27,14 +27,14 @@ public class StoreController {
     }
 
 
-    @GetMapping("{id}")
+    @GetMapping("store/{id}")
     public ResponseEntity<Optional<StoreEntity>> getStoreById(@PathVariable("id") Long id) {
 //        notFoundError(id);
         Optional<StoreEntity> store = storeService.findStoreById(id);
         return new ResponseEntity<>(store, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("store")
     public ResponseEntity<Iterable<StoreEntity>> getAllStores() {
         Iterable<StoreEntity> foundStores = storeService.getAllStores();
         if (foundStores == null) {
@@ -44,7 +44,7 @@ public class StoreController {
     }
 
 
-    @PatchMapping("{id}")
+    @PatchMapping("store/{id}")
     public ResponseEntity<StoreEntity> updateStore(@PathVariable("id") Long id, @RequestBody StoreEntity store) {
 //            notFoundError(id);
         StoreEntity foundStore = storeService.updateStore(id, store);
@@ -52,14 +52,14 @@ public class StoreController {
     }
 
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("store/{id}")
     public ResponseEntity<Optional<StoreEntity>> deleteStore(@PathVariable("id") Long id) {
         storeService.deleteStore(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @PatchMapping("link/{storeId}/{departmentId}")
+    @PatchMapping("store/link/{storeId}/{departmentId}")
     public ResponseEntity<Optional<StoreEntity>> linkDepartmentToStore(@PathVariable("storeId") Long storeId, @PathVariable("departmentId") Long departmentId) {
 
         Optional<StoreEntity> store = storeService.linkDepartmentToStore(storeId, departmentId);
@@ -68,7 +68,7 @@ public class StoreController {
     }
 
 
-    @PatchMapping("unlink/{storeId}/{departmentId}")
+    @PatchMapping("store/unlink/{storeId}/{departmentId}")
     public ResponseEntity<Optional<StoreEntity>> unlinkDepartmentFromStore(@PathVariable("storeId") Long storeId, @PathVariable("departmentId") Long departmentId) {
 
         Optional<StoreEntity> store = storeService.unlinkDepartmentFromStore(storeId, departmentId);

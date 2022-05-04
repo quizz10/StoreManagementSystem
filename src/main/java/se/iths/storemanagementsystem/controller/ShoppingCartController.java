@@ -9,7 +9,6 @@ import se.iths.storemanagementsystem.service.ShoppingCartService;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("shoppingcart")
 public class ShoppingCartController {
     ShoppingCartService shoppingCartService;
 
@@ -18,21 +17,21 @@ public class ShoppingCartController {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @PostMapping("")
+    @PostMapping("shoppingcart") // Todo: onödig?
     public ResponseEntity<Optional<ShoppingCartEntity>> createShoppingCart(@RequestBody ShoppingCartEntity shoppingCart) {
         Optional<ShoppingCartEntity> newShoppingCart;
             newShoppingCart = shoppingCartService.createShoppingCart(shoppingCart);
         return new ResponseEntity<>(newShoppingCart, HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}") //                      ToDo: onödig?
     public ResponseEntity<Optional<ShoppingCartEntity>> getShoppingCartById(@PathVariable Long id) {
         Optional<ShoppingCartEntity> foundCart = shoppingCartService.findShoppingCartById(id);
 
         return new ResponseEntity<>(foundCart, HttpStatus.FOUND);
     }
 
-    @PatchMapping("link/{cartId}/{itemId}")
+    @PatchMapping("user/shoppingcart/link/{cartId}/{itemId}")
     public ResponseEntity<Optional<ShoppingCartEntity>> linkItemToShoppingCart(@PathVariable("cartId") Long cartId, @PathVariable("itemId") Long itemId) {
 
             Optional<ShoppingCartEntity> cart = shoppingCartService.linkItemToShoppingCart(cartId, itemId);
@@ -40,7 +39,7 @@ public class ShoppingCartController {
             return new ResponseEntity<>(cart, HttpStatus.CREATED);
     }
 
-    @PatchMapping("unlink/{cartId}/{itemId}")
+    @PatchMapping("user/shoppingcart/unlink/{cartId}/{itemId}")
     public ResponseEntity<Optional<ShoppingCartEntity>> unlinkItemFromShoppingCart(@PathVariable("cartId") Long cartId, @PathVariable("itemId") Long itemId) {
 
             Optional<ShoppingCartEntity> cart = shoppingCartService.unlinkItemFromShoppingCart(cartId, itemId);

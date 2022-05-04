@@ -10,7 +10,6 @@ import se.iths.storemanagementsystem.service.UserService;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("user")
 public class UserController {
 
     boolean isSetup;
@@ -20,19 +19,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("signup")
+    @PostMapping("user/signup")
     public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user) {
         userService.addUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @PatchMapping("updaterole/{id}")
+    @PatchMapping("employee/updaterole/{id}")
     public ResponseEntity<Optional<UserEntity>> updateRole(@PathVariable Long id, @RequestParam String role){
         Optional<UserEntity> user = userService.updateUserRole(id, role);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("setup")
+    @GetMapping("user/setup")
     public void setupDb(){
         if (!isSetup){
             userService.addInitialAdmin();
@@ -40,14 +39,14 @@ public class UserController {
         isSetup = true;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("user/{id}")
     public ResponseEntity<Optional<UserEntity>> findUser(@PathVariable Long id) {
 //        notFoundError(id);
         Optional<UserEntity> foundUser = userService.findUserById(id);
         return new ResponseEntity<>(foundUser, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("user")
     public ResponseEntity<Iterable<UserEntity>> findAllUsers() { // får no body istället för exception i insomnia
         Iterable<UserEntity> foundUsers = userService.findAllUsers();
         if (foundUsers == null) {
@@ -56,14 +55,14 @@ public class UserController {
         return new ResponseEntity<>(foundUsers, HttpStatus.OK);
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping("employee/updateuser/{id}")
     public ResponseEntity<Optional<UserEntity>> updateUser(@PathVariable Long id, @RequestBody Optional<UserEntity> user) {
 //            notFoundError(id);
             user = userService.updateUser(id, user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @DeleteMapping("admin/{id}")
+    @DeleteMapping("admin/deleteuser/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
 

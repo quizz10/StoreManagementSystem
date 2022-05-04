@@ -10,7 +10,6 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("item")
 public class ItemController {
 
     ItemService itemService;
@@ -25,7 +24,7 @@ public class ItemController {
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("general/item/{id}")
     public ResponseEntity<Optional<ItemEntity>> getItemById(@PathVariable("id") Long id) {
       //  notFoundError(id); // byta till spring-kompatibel
         Optional<ItemEntity> foundItem = itemService.findItemById(id);
@@ -33,7 +32,7 @@ public class ItemController {
     }
 
 
-      @GetMapping
+      @GetMapping("general/item")
       public ResponseEntity<Iterable<ItemEntity>> getAllItems() {
           Iterable<ItemEntity> foundItems = itemService.getAllItems();
           if (foundItems == null) {
@@ -42,14 +41,14 @@ public class ItemController {
           return new ResponseEntity<>(foundItems, HttpStatus.OK);
       }
 
-    @PatchMapping("{id}")
+    @PatchMapping("employee/item/{id}")
     public ResponseEntity<Optional<ItemEntity>> updateItem(@PathVariable("id") Long id, @RequestBody Optional<ItemEntity> item) {
         // notFoundError(id);
         item = itemService.updateItem(id, item);
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("employee/item/{id}")
     public ResponseEntity<Optional<ItemEntity>> deleteItem(@PathVariable("id") Long id) {
             itemService.deleteItem(id);
         return new ResponseEntity<>(HttpStatus.OK);

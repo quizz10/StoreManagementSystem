@@ -40,18 +40,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/item/**", "/shoppingcart/**", "/department/**").denyAll()
-                .antMatchers(HttpMethod.GET, "/item/**", "/shoppingcart/**").hasRole("USER")
-                .antMatchers(HttpMethod.PATCH, "/shoppingcart/**").hasRole("USER")
-                .antMatchers(HttpMethod.POST, "/item/**").hasRole("EMPLOYEE")
-                .antMatchers(HttpMethod.DELETE, "/item/**").hasRole("EMPLOYEE")
-                .and()
-                .authorizeRequests()
                 .antMatchers("/user/signup", "/user/setup").permitAll()
-                .antMatchers("/changerole", "/adminportal").hasRole("ADMIN")
-                .antMatchers("/user/admin/**").hasAnyRole("ADMIN", "EMPLOYEE")
-                .antMatchers("/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .antMatchers("/user/**").hasAnyRole("USER", "EMPLOYEE")
+                .antMatchers("/employee/**").hasRole("EMPLOYEE")
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/general/**").hasAnyRole("ADMIN", "EMPLOYEE", "USER")
+                // Todo: Undersök om det behövs authenticated() här
                 .and()
                 .httpBasic();
     }

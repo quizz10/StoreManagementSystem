@@ -16,6 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final StoreUserDetailsService storeUserDetailsService;
 
+
     public SecurityConfig(StoreUserDetailsService storeUserDetailsService) {
         this.storeUserDetailsService = storeUserDetailsService;
     }
@@ -35,16 +36,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        final String USER = "USER";
+        final String EMPLOYEE = "EMPLOYEE";
+        final String ADMIN = "ADMIN";
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user/signup", "/user/setup").permitAll()
-                .antMatchers("/user/**").hasAnyRole("USER", "EMPLOYEE")
-                .antMatchers("/employee/**").hasRole("EMPLOYEE")
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/general/**").hasAnyRole("ADMIN", "EMPLOYEE", "USER")
+                .antMatchers("/user/**").hasAnyRole(USER, EMPLOYEE)
+                .antMatchers("/employee/**").hasRole(EMPLOYEE)
+                .antMatchers("/admin/**").hasRole(ADMIN)
+                .antMatchers("/general/**").hasAnyRole(ADMIN, EMPLOYEE, USER)
                 // Todo: Undersök om det behövs authenticated() här
                 .and()
                 .httpBasic();

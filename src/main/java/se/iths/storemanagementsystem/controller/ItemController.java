@@ -1,16 +1,24 @@
 package se.iths.storemanagementsystem.controller;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.iths.storemanagementsystem.dto.ItemDto;
 import se.iths.storemanagementsystem.entity.ItemEntity;
 import se.iths.storemanagementsystem.service.ItemService;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
 public class ItemController {
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     ItemService itemService;
 
@@ -24,21 +32,29 @@ public class ItemController {
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
+
+    //TODO: Fortsätt härifrån, vi ska göra om alla returns till DTOer med
+    // hjälp av modelmapper och hjälpklasser som exempelvis ItemDto.
     @GetMapping("general/item/{id}")
-    public ResponseEntity<Optional<ItemEntity>> getItemById(@PathVariable("id") Long id) {
+    public ResponseEntity<ItemDto> getItemById(@PathVariable("id") Long id) {
       //  notFoundError(id); // byta till spring-kompatibel
+//        Optional<ItemEntity> foundItem = itemService.findItemById(id);
+//        return new ResponseEntity<>(foundItem, HttpStatus.OK);
         Optional<ItemEntity> foundItem = itemService.findItemById(id);
-        return new ResponseEntity<>(foundItem, HttpStatus.OK);
+        return ResponseEntity.ok().body(modelMapper.map(foundItem, ItemDto.class));
     }
 
 
       @GetMapping("general/item")
-      public ResponseEntity<Iterable<ItemEntity>> getAllItems() {
-          Iterable<ItemEntity> foundItems = itemService.getAllItems();
-          if (foundItems == null) {
-              return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-          }
-          return new ResponseEntity<>(foundItems, HttpStatus.OK);
+      public List<ItemDto> getAllItems() {
+//          Iterable<ItemEntity> foundItems = itemService.getAllItems();
+//          if (foundItems == null) {
+//              return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//          }
+//          return new ResponseEntity<>(foundItems, HttpStatus.OK);
+
+          return itemService.getAllItemsAsList().stream().map(item -> modelMapper.map(item, ItemDto.class))
+                  .collect(Collectors.toList());
       }
 
     @PatchMapping("employee/item/{id}")

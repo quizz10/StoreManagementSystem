@@ -6,6 +6,7 @@ import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.repository.ItemRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +29,11 @@ public class ItemService {
     public Iterable<ItemEntity> getAllItems() {
         return itemRepository.findAll();
     }
+
+    public List<ItemEntity> getAllItemsAsList() {
+        return itemRepository.findAll();
+    }
+
 
     public Optional<ItemEntity> updateItem(Long id, Optional<ItemEntity> item) {
         Optional<ItemEntity> foundItem = itemRepository.findById(id);

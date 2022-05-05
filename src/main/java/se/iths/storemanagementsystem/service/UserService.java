@@ -3,9 +3,9 @@ package se.iths.storemanagementsystem.service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.iths.storemanagementsystem.entity.*;
+import se.iths.storemanagementsystem.jms.sender.Sender;
 import se.iths.storemanagementsystem.repository.*;
 
-import javax.management.relation.Role;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
@@ -19,9 +19,10 @@ public class UserService {
     private final DepartmentRepository departmentRepository;
     private final ItemRepository itemRepository;
     private final StoreRepository storeRepository;
+    private final Sender jmsSender;
 
     public UserService(RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                       UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, DepartmentRepository departmentRepository, ItemRepository itemRepository, StoreRepository storeRepository) {
+                       UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, DepartmentRepository departmentRepository, ItemRepository itemRepository, StoreRepository storeRepository, Sender jmsSender) {
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
@@ -29,6 +30,7 @@ public class UserService {
         this.departmentRepository = departmentRepository;
         this.itemRepository = itemRepository;
         this.storeRepository = storeRepository;
+        this.jmsSender = jmsSender;
     }
 
 
@@ -42,6 +44,8 @@ public class UserService {
         shoppingCart.setUser(userEntity);
         shoppingCartRepository.save(shoppingCart);
         userRepository.save(userEntity);
+
+        jmsSender.sendMessage(userEntity);
     }
 
     // Method for adding an admin and setting up admin+customer roles, is run only once.

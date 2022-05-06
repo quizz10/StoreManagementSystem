@@ -22,7 +22,10 @@ public class ItemDto {
     }
 
     public String getDepartment() {
-        return department.getDepartmentName();
+        if(department != null) {
+            return department.getDepartmentName();
+        }
+        return "";
     }
 
     public void setDepartment(DepartmentEntity department) {

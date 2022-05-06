@@ -12,6 +12,7 @@ import se.iths.storemanagementsystem.repository.UserRepository;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartmentService {
@@ -79,7 +80,8 @@ public class DepartmentService {
 
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
         Optional<UserEntity> foundUser = findUserById(userId);
-        if (foundUser.get().getRoles().contains("EMPLOYEE")) {
+
+        if (foundUser.get().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"))) {
             foundDepartment.get().addEmployee(foundUser.get());
             departmentRepository.save(foundDepartment.get());
         }

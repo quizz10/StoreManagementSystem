@@ -55,7 +55,10 @@ public class DepartmentDto {
     }
 
     public String getStore() {
-        return store.getStoreName();
+        if(store != null) {
+            return store.getStoreName();
+        } else
+            return "";
     }
 
     public void setStore(StoreEntity store) {

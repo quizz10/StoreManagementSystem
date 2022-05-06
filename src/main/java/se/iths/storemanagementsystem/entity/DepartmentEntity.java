@@ -85,6 +85,7 @@ public class DepartmentEntity {
 
     public void removeEmployee(UserEntity employee) {
         employeeList.remove(employee);
+        employee.setDepartment(null);
     }
 
 }

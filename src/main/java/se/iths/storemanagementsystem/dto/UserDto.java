@@ -84,12 +84,14 @@ public class UserDto {
 
     public String getDepartment() {
 
-        RoleEntity foundRole = roles.stream()
-                .filter(role -> role.getName().equals("ROLE_EMPLOYEE")).findAny()
-                .orElse(null);
+        if(department != null) {
+            RoleEntity foundRole = roles.stream()
+                    .filter(role -> role.getName().equals("ROLE_EMPLOYEE")).findAny()
+                    .orElse(null);
 
-        if(foundRole != null) {
-            return department.getDepartmentName();
+            if (foundRole != null) {
+                return department.getDepartmentName();
+            }
         }
         return "";
     }

@@ -1,6 +1,7 @@
 package se.iths.storemanagementsystem.dto;
 
 
+import se.iths.storemanagementsystem.entity.DepartmentEntity;
 import se.iths.storemanagementsystem.entity.RoleEntity;
 import se.iths.storemanagementsystem.entity.ShoppingCartEntity;
 
@@ -14,6 +15,7 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
+    private DepartmentEntity department;
 
     private ShoppingCartEntity shoppingCart;
     Set<RoleEntity> roles = new HashSet<>();
@@ -22,10 +24,11 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(Long id, String username, String email, ShoppingCartEntity shoppingCart) {
+    public UserDto(Long id, String username, String email, DepartmentEntity department, ShoppingCartEntity shoppingCart) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.department = department;
         this.shoppingCart = shoppingCart;
     }
 
@@ -77,5 +80,21 @@ public class UserDto {
 
     public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
+    }
+
+    public String getDepartment() {
+
+        RoleEntity foundRole = roles.stream()
+                .filter(role -> role.getName().equals("ROLE_EMPLOYEE")).findAny()
+                .orElse(null);
+
+        if(foundRole != null) {
+            return department.getDepartmentName();
+        }
+        return "";
+    }
+
+    public void setDepartment(DepartmentEntity department) {
+        this.department = department;
     }
 }

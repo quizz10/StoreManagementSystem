@@ -10,6 +10,7 @@ import se.iths.storemanagementsystem.repository.ItemRepository;
 import se.iths.storemanagementsystem.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,15 +26,16 @@ public class DepartmentService {
         this.itemRepository = itemRepository;
     }
 
-    public void addDepartment(DepartmentEntity department) {
-        departmentRepository.save(department);
+    public DepartmentEntity addDepartment(DepartmentEntity department) {
+        DepartmentEntity savedDepartment = departmentRepository.save(department);
+        return savedDepartment;
     }
 
     public Optional<DepartmentEntity> findDepartmentById(Long id) {
         return Optional.ofNullable(departmentRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public Iterable<DepartmentEntity> getAllDepartments() {
+    public List<DepartmentEntity> getAllDepartments() {
         return departmentRepository.findAll();
     }
 

@@ -9,15 +9,24 @@ public class ItemDto {
 
     private double price;
 
+    private DepartmentEntity department;
 
     public ItemDto() {
     }
 
-    public ItemDto(Long id, String name, double price) {
+    public ItemDto(Long id, String name, double price, DepartmentEntity department) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.department = department;
+    }
 
+    public String getDepartment() {
+        return department.getDepartmentName();
+    }
+
+    public void setDepartment(DepartmentEntity department) {
+        this.department = department;
     }
 
     public Long getId() {

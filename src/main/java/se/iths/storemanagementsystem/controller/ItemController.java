@@ -11,11 +11,11 @@ import se.iths.storemanagementsystem.service.ItemService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 
 @RestController
-public class  ItemController {
+public class ItemController {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -37,7 +37,7 @@ public class  ItemController {
     // hjälp av modelmapper och hjälpklasser som exempelvis ItemDto.
     @GetMapping("general/item/{id}")
     public ResponseEntity<ItemDto> getItemById(@PathVariable("id") Long id) {
-      //  notFoundError(id); // byta till spring-kompatibel
+        //  notFoundError(id); // byta till spring-kompatibel
 //        Optional<ItemEntity> foundItem = itemService.findItemById(id);
 //        return new ResponseEntity<>(foundItem, HttpStatus.OK);
         Optional<ItemEntity> foundItem = itemService.findItemById(id);
@@ -45,28 +45,30 @@ public class  ItemController {
     }
 
 
-      @GetMapping("general/item")
-      public List<ItemDto> getAllItems() {
+    @GetMapping("general/item")
+    public ResponseEntity<List<ItemDto>> getAllItems() {
 //          Iterable<ItemEntity> foundItems = itemService.getAllItems();
 //          if (foundItems == null) {
 //              return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //          }
 //          return new ResponseEntity<>(foundItems, HttpStatus.OK);
+        List<ItemDto> itemDtoList = itemService.getAllItemsAsList().stream()
+                .map(item -> modelMapper.map(item, ItemDto.class)).toList();
 
-          return itemService.getAllItemsAsList().stream().map(item -> modelMapper.map(item, ItemDto.class))
-                  .collect(Collectors.toList());
-      }
+        return new ResponseEntity<>(itemDtoList, HttpStatus.OK);
+    }
 
     @PatchMapping("employee/item/{id}")
-    public ResponseEntity<Optional<ItemEntity>> updateItem(@PathVariable("id") Long id, @RequestBody Optional<ItemEntity> item) {
+    public ResponseEntity<ItemDto> updateItem(@PathVariable("id") Long id, @RequestBody Optional<ItemEntity> item) {
         // notFoundError(id);
-        item = itemService.updateItem(id, item);
-        return new ResponseEntity<>(item, HttpStatus.OK);
+       Optional<ItemEntity> updatedItem = itemService.updateItem(id, item);
+
+        return new ResponseEntity<>(modelMapper.map(updatedItem, ItemDto.class), HttpStatus.OK);
     }
 
     @DeleteMapping("employee/item/{id}")
     public ResponseEntity<Optional<ItemEntity>> deleteItem(@PathVariable("id") Long id) {
-            itemService.deleteItem(id);
+        itemService.deleteItem(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

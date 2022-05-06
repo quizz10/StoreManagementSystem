@@ -7,6 +7,7 @@ import se.iths.storemanagementsystem.jms.sender.Sender;
 import se.iths.storemanagementsystem.repository.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +35,7 @@ public class UserService {
     }
 
 
-    public void addUser(UserEntity userEntity) {
+    public UserEntity addUser(UserEntity userEntity) {
         userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
         RoleEntity role = roleRepository.findByName("ROLE_USER");
         userEntity.addRole(role);
@@ -43,9 +44,10 @@ public class UserService {
         userEntity.setShoppingCart(shoppingCart);
         shoppingCart.setUser(userEntity);
         shoppingCartRepository.save(shoppingCart);
-        userRepository.save(userEntity);
+        UserEntity savedUser = userRepository.save(userEntity);
 
-        jmsSender.sendMessage(userEntity);
+        //jmsSender.sendMessage(savedUser);
+        return savedUser;
     }
 
     // Method for adding an admin and setting up admin+customer roles, is run only once.
@@ -101,6 +103,10 @@ public class UserService {
     }
 
     public Iterable<UserEntity> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public List<UserEntity> getAllUsersAsList() {
         return userRepository.findAll();
     }
 

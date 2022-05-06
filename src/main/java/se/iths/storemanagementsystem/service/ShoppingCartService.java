@@ -38,7 +38,7 @@ public class ShoppingCartService {
         Optional<ShoppingCartEntity> foundCart = shoppingCartRepository.findById(cartId);
         Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
 
-            foundCart.get().addItem(Optional.of(foundItem.get()));
+            foundCart.get().addItem(foundItem.get());
             shoppingCartRepository.save(foundCart.get());
             return foundCart;
 

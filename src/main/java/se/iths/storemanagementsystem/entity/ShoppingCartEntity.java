@@ -25,8 +25,8 @@ public class ShoppingCartEntity {
 
     }
 
-    public void addItem(Optional<ItemEntity> item){
-        items.add(item.get());
+    public void addItem(ItemEntity item){
+        items.add(item);
     }
     //TODO om vi pallar. Fixa så man kan ha fler av samma vara.....
 
@@ -45,6 +45,7 @@ public class ShoppingCartEntity {
     }
 
     public double getTotalPrice() {
+        totalPrice = items.stream().mapToDouble(ItemEntity::getPrice).sum();
         return totalPrice;
     }
 

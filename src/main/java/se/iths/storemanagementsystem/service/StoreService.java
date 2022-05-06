@@ -21,8 +21,8 @@ public class StoreService {
         this.departmentRepository = departmentRepository;
     }
 
-    public void addStore(StoreEntity store) {
-        storeRepository.save(store);
+    public StoreEntity addStore(StoreEntity store) {
+        return storeRepository.save(store);
     }
 
     public Optional<StoreEntity> findStoreById(Long id) {

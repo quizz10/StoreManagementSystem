@@ -18,7 +18,6 @@ public class Sender {
         this.jmsTemplate = jmsTemplate;
     }
 
-    //@Scheduled(fixedRate = 2000)
     public void sendMessage(UserEntity userEntity) {
 
         System.out.println("Sending message...");

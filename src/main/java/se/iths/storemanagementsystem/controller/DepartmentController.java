@@ -11,7 +11,6 @@ import se.iths.storemanagementsystem.dto.UserDto;
 import se.iths.storemanagementsystem.entity.DepartmentEntity;
 import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.service.DepartmentService;
-import se.iths.storemanagementsystem.utils.JsonFormatter;
 
 import java.util.List;
 import java.util.Optional;
@@ -85,13 +84,13 @@ public class DepartmentController {
     public ResponseEntity linkItemToDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("itemid") Long itemId) {
         Optional<DepartmentEntity> department = departmentService.linkItemToDepartment(departmentId, itemId);
         DepartmentDto departmentDto = modelMapper.map(department, DepartmentDto.class);
-        return new ResponseEntity<>(new JsonFormatter(HttpStatus.OK.value(), "Successfully linked item with id " + itemId + " to department " + departmentDto.getDepartmentName()), HttpStatus.OK);
+        return new ResponseEntity<>(("Successfully linked item with id " + itemId + " to department " + departmentDto.getDepartmentName()), HttpStatus.OK);
     }
 
     @PatchMapping("employee/department/unlinkitem/{departmentid}/{itemid}")
     public ResponseEntity unLinkItemFromDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("itemid") Long itemId) {
         Optional<DepartmentEntity> department = departmentService.unLinkItemFromDepartment(departmentId, itemId);
         DepartmentDto departmentDto = modelMapper.map(department, DepartmentDto.class);
-        return new ResponseEntity<>(new JsonFormatter(HttpStatus.OK.value(), "Successfully unlinked item with id " + itemId + " from department " + departmentDto.getDepartmentName()), HttpStatus.OK);
+        return new ResponseEntity<>(("Successfully unlinked item with id " + itemId + " from department " + departmentDto.getDepartmentName()), HttpStatus.OK);
     }
 }

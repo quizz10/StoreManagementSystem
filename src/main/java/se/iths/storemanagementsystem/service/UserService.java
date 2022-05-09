@@ -153,7 +153,7 @@ public class UserService {
                 throw new WrongEmailFormatException("Email format is invalid.");
         }
 
-        //jmsSender.sendMessage(savedUser);
+        jmsSender.sendMessage(savedUser);
         return savedUser;
     }
 }

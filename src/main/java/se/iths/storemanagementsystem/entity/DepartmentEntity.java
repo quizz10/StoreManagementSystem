@@ -3,6 +3,7 @@ package se.iths.storemanagementsystem.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ public class DepartmentEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Size(min = 2)
+    @Column(unique=true)
     private String departmentName;
 
     @OneToMany(cascade = CascadeType.PERSIST)

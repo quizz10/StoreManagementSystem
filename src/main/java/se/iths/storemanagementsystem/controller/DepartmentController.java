@@ -31,7 +31,11 @@ public class DepartmentController {
 
     @PostMapping("admin/department")
     public ResponseEntity<DepartmentDto> createDepartment(@RequestBody Optional<DepartmentEntity> department) {
-        DepartmentEntity addedDepartment = departmentService.addDepartment(department.get());
+//        try {
+            DepartmentEntity addedDepartment = departmentService.addDepartment(department.get());
+//        } catch (CustomException c) {
+//            throw new
+//        }
 
         return new ResponseEntity<>(modelMapper.map(addedDepartment, DepartmentDto.class), HttpStatus.CREATED);
     }
@@ -93,6 +97,7 @@ public class DepartmentController {
         DepartmentDto departmentDto = modelMapper.map(department, DepartmentDto.class);
         return new ResponseEntity<>(new JsonFormatter(HttpStatus.OK.value(), "Successfully linked item with id " + itemId + " to department " + departmentDto.getDepartmentName()), HttpStatus.OK);
     }
+
     //TODO: Bestämma sig för om vi ska returnera vår jsonformatter eller skicka tillbaka objektet.
     @PatchMapping("employee/department/unlinkitem/{departmentid}/{itemid}")
     public ResponseEntity unLinkItemFromDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("itemid") Long itemId) {

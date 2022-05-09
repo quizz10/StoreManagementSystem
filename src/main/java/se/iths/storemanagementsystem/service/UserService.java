@@ -1,8 +1,13 @@
 package se.iths.storemanagementsystem.service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionSystemException;
 import se.iths.storemanagementsystem.entity.*;
+import se.iths.storemanagementsystem.exceptions.customexceptions.DuplicateEmailException;
+import se.iths.storemanagementsystem.exceptions.customexceptions.ShortPasswordException;
+import se.iths.storemanagementsystem.exceptions.customexceptions.WrongEmailFormatException;
 import se.iths.storemanagementsystem.jms.sender.Sender;
 import se.iths.storemanagementsystem.repository.*;
 
@@ -36,6 +41,11 @@ public class UserService {
 
 
     public UserEntity addUser(UserEntity userEntity) {
+        if (userEntity.getPassword().length() < 8) {
+            throw new ShortPasswordException("Password too short, minimum 8 characters.");
+        }
+
+        UserEntity savedUser = null;
         userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
         RoleEntity role = roleRepository.findByName("ROLE_USER");
         userEntity.addRole(role);
@@ -44,7 +54,15 @@ public class UserService {
         userEntity.setShoppingCart(shoppingCart);
         shoppingCart.setUser(userEntity);
         shoppingCartRepository.save(shoppingCart);
-        UserEntity savedUser = userRepository.save(userEntity);
+        try {
+            savedUser = userRepository.save(userEntity);
+        } catch (TransactionSystemException  | DataIntegrityViolationException t) {
+            if (t.getMessage().startsWith("could not execute")) {
+                throw new DuplicateEmailException("There already is a user with that email");
+            }
+            if(t.getMessage().startsWith("Could not commit"))
+            throw new WrongEmailFormatException("Email format is invalid.");
+        }
 
         //jmsSender.sendMessage(savedUser);
         return savedUser;
@@ -59,9 +77,9 @@ public class UserService {
         ItemEntity citron = new ItemEntity("Citron", 10);
         ItemEntity banan = new ItemEntity("Banan", 29);
 
-        UserEntity admin = new UserEntity("Admin", "admin@admin.se", bCryptPasswordEncoder.encode("123"));
-        UserEntity customer = new UserEntity("Customer", "testuser@ica.se", bCryptPasswordEncoder.encode("123"));
-        UserEntity employee = new UserEntity("Employee", "employee@ica.se", bCryptPasswordEncoder.encode("123"));
+        UserEntity admin = new UserEntity("admin@admin.se", bCryptPasswordEncoder.encode("123123123123"));
+        UserEntity customer = new UserEntity("testuser@ica.se", bCryptPasswordEncoder.encode("123123123123"));
+        UserEntity employee = new UserEntity("employee@ica.se", bCryptPasswordEncoder.encode("123123123123"));
 
 
         roleRepository.save(new RoleEntity("ROLE_ADMIN"));
@@ -84,6 +102,7 @@ public class UserService {
         userRepository.save(customer);
         userRepository.save(admin);
         userRepository.save(employee);
+
     }
 
     public Optional<UserEntity> updateUserRole(Long id, String roleName) {
@@ -136,9 +155,6 @@ public class UserService {
 
 
     private void setFields(Optional<UserEntity> userEntity, Optional<UserEntity> foundUser) {
-        if (!(userEntity.get().getUsername() == null)) {
-            foundUser.get().setUsername(userEntity.get().getUsername());
-        }
         if (!(userEntity.get().getEmail() == null)) {
             foundUser.get().setEmail(userEntity.get().getEmail());
         }

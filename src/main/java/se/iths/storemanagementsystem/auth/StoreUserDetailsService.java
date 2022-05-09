@@ -18,11 +18,11 @@ public class StoreUserDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByEmail(email);
 
         if (user == null) {
-            throw new UsernameNotFoundException("Can't find user with username: " + username);
+            throw new UsernameNotFoundException("Can't find user with email: " + email);
         }
 
         return new StorePrincipal(user);

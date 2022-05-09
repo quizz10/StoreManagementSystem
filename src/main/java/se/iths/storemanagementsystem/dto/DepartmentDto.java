@@ -45,7 +45,7 @@ public class DepartmentDto {
     public List<String> getEmployeeList() {
         List<String> employees = new ArrayList<>();
         for(UserEntity user : employeeList) {
-            employees.add(user.getUsername());
+            employees.add(user.getEmail());
         }
         return employees;
     }

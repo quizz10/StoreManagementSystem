@@ -4,23 +4,19 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import se.iths.storemanagementsystem.dto.UserDto;
 import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.service.UserService;
 
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 public class UserController {
 
     @Autowired
     private ModelMapper modelMapper;
-
 
     boolean isSetup;
     UserService userService;

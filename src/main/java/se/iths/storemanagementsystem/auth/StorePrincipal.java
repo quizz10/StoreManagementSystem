@@ -36,7 +36,7 @@ public class StorePrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userEntity.getUsername();
+        return this.userEntity.getEmail();
     }
 
     @Override

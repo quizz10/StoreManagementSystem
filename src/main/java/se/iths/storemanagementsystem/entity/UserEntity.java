@@ -3,6 +3,8 @@ package se.iths.storemanagementsystem.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,8 +14,11 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String username;
+    @Column(unique = true)
+    @Email(regexp = ".+[@].+[\\.].+")
     private String email;
+
+    @Size(min = 8)
     private String password;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private ShoppingCartEntity shoppingCart;
@@ -24,8 +29,7 @@ public class UserEntity {
     private DepartmentEntity department;
 
 
-    public UserEntity(String username, String email, String password) {
-        this.username = username;
+    public UserEntity(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -57,13 +61,7 @@ public class UserEntity {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getEmail() {
         return email;
@@ -98,4 +96,5 @@ public class UserEntity {
     public void setShoppingCart(ShoppingCartEntity shoppingCart) {
         this.shoppingCart = shoppingCart;
     }
+
 }

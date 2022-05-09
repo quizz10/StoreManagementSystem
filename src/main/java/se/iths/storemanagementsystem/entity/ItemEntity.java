@@ -3,6 +3,8 @@ package se.iths.storemanagementsystem.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Size;
 
 
 @Entity
@@ -12,8 +14,11 @@ public class ItemEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(unique = true)
+    @Size(min = 2)
     private String name;
 
+    @DecimalMin("1")
     private double price;
 
     @ManyToOne

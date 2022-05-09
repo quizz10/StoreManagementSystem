@@ -4,7 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 import se.iths.storemanagementsystem.dto.ShoppingCartDto;
 import se.iths.storemanagementsystem.entity.ShoppingCartEntity;
 import se.iths.storemanagementsystem.service.ShoppingCartService;
@@ -23,14 +26,7 @@ public class ShoppingCartController {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @PostMapping("shoppingcart") // Todo: onödig?
-    public ResponseEntity<Optional<ShoppingCartEntity>> createShoppingCart(@RequestBody ShoppingCartEntity shoppingCart) {
-        Optional<ShoppingCartEntity> newShoppingCart;
-        newShoppingCart = shoppingCartService.createShoppingCart(shoppingCart);
-        return new ResponseEntity<>(newShoppingCart, HttpStatus.CREATED);
-    }
-
-    @GetMapping("user/shoppingcart/{id}") //                      ToDo: onödig?
+    @GetMapping("user/shoppingcart/{id}")
     public ResponseEntity<ShoppingCartDto> getShoppingCartById(@PathVariable Long id) {
         Optional<ShoppingCartEntity> foundCart = shoppingCartService.findShoppingCartById(id);
         ShoppingCartDto shoppingCartDto = modelMapper.map(foundCart, ShoppingCartDto.class);

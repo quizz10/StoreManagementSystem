@@ -48,7 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/employee/**").hasRole(EMPLOYEE)
                 .antMatchers("/admin/**").hasRole(ADMIN)
                 .antMatchers("/general/**").hasAnyRole(ADMIN, EMPLOYEE, USER)
-                // Todo: Undersök om det behövs authenticated() här
                 .and()
                 .httpBasic();
     }

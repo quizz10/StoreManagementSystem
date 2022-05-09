@@ -7,7 +7,6 @@ import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundExcepti
 import se.iths.storemanagementsystem.repository.ItemRepository;
 import se.iths.storemanagementsystem.repository.ShoppingCartRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
@@ -28,15 +27,15 @@ public class ShoppingCartService {
     }
 
     public Optional<ShoppingCartEntity> findShoppingCartById(Long id) {
-        if(shoppingCartRepository.findById(id).isPresent()){
+        if (shoppingCartRepository.findById(id).isPresent()) {
             return shoppingCartRepository.findById(id);
-        }else throw new NotFoundException("Could not find shopping cart with id " + id);
+        } else throw new NotFoundException("Could not find shopping cart with id " + id);
     }
 
     public Optional<ItemEntity> findItemById(Long id) {
-        if(itemRepository.findById(id).isPresent()){
+        if (itemRepository.findById(id).isPresent()) {
             return itemRepository.findById(id);
-        }else throw new NotFoundException("Could not find item with id " + id);
+        } else throw new NotFoundException("Could not find item with id " + id);
 
     }
 
@@ -44,9 +43,9 @@ public class ShoppingCartService {
         Optional<ShoppingCartEntity> foundCart = shoppingCartRepository.findById(cartId);
         Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
 
-            foundCart.get().addItem(foundItem.get());
-            shoppingCartRepository.save(foundCart.get());
-            return foundCart;
+        foundCart.get().addItem(foundItem.get());
+        shoppingCartRepository.save(foundCart.get());
+        return foundCart;
 
     }
 
@@ -54,9 +53,9 @@ public class ShoppingCartService {
         Optional<ShoppingCartEntity> foundCart = shoppingCartRepository.findById(cartId);
         Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
 
-            foundCart.get().removeItem(foundItem);
-            shoppingCartRepository.save(foundCart.get());
-            return foundCart;
+        foundCart.get().removeItem(foundItem);
+        shoppingCartRepository.save(foundCart.get());
+        return foundCart;
 
     }
 }

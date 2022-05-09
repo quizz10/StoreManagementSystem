@@ -5,11 +5,11 @@ public class JsonFormatter {
     private int statusCode;
     private String message;
 
-    public JsonFormatter(){
+    public JsonFormatter() {
 
     }
 
-    public JsonFormatter(int statusCode, String message){
+    public JsonFormatter(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
     }

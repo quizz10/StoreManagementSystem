@@ -22,7 +22,7 @@ public class ItemDto {
     }
 
     public String getDepartment() {
-        if(department != null) {
+        if (department != null) {
             return department.getDepartmentName();
         }
         return "";
@@ -55,7 +55,6 @@ public class ItemDto {
     public void setPrice(double price) {
         this.price = price;
     }
-
 
 
 }

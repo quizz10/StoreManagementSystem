@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 
-
 @RestController
 public class ItemController {
 
@@ -33,13 +32,8 @@ public class ItemController {
     }
 
 
-    //TODO: Fortsätt härifrån, vi ska göra om alla returns till DTOer med
-    // hjälp av modelmapper och hjälpklasser som exempelvis ItemDto.
     @GetMapping("general/item/{id}")
     public ResponseEntity<ItemDto> getItemById(@PathVariable("id") Long id) {
-        //  notFoundError(id); // byta till spring-kompatibel
-//        Optional<ItemEntity> foundItem = itemService.findItemById(id);
-//        return new ResponseEntity<>(foundItem, HttpStatus.OK);
         Optional<ItemEntity> foundItem = itemService.findItemById(id);
         return ResponseEntity.ok().body(modelMapper.map(foundItem, ItemDto.class));
     }
@@ -47,11 +41,6 @@ public class ItemController {
 
     @GetMapping("general/item")
     public ResponseEntity<List<ItemDto>> getAllItems() {
-//          Iterable<ItemEntity> foundItems = itemService.getAllItems();
-//          if (foundItems == null) {
-//              return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//          }
-//          return new ResponseEntity<>(foundItems, HttpStatus.OK);
         List<ItemDto> itemDtoList = itemService.getAllItemsAsList().stream()
                 .map(item -> modelMapper.map(item, ItemDto.class)).toList();
 
@@ -60,8 +49,7 @@ public class ItemController {
 
     @PatchMapping("employee/item/{id}")
     public ResponseEntity<ItemDto> updateItem(@PathVariable("id") Long id, @RequestBody Optional<ItemEntity> item) {
-        // notFoundError(id);
-       Optional<ItemEntity> updatedItem = itemService.updateItem(id, item);
+        Optional<ItemEntity> updatedItem = itemService.updateItem(id, item);
 
         return new ResponseEntity<>(modelMapper.map(updatedItem, ItemDto.class), HttpStatus.OK);
     }
@@ -71,14 +59,4 @@ public class ItemController {
         itemService.deleteItem(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-/*
-    public void notFoundError(Long id) {
-
-        if (!itemService.findItemById(id).isPresent()) {
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(new JsonFormatter(Response.Status.NOT_FOUND.getStatusCode(), "There is no item with the id: " + id)).build());
-        }
-    }
-
- */
 }

@@ -7,7 +7,6 @@ import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundExcepti
 import se.iths.storemanagementsystem.repository.DepartmentRepository;
 import se.iths.storemanagementsystem.repository.StoreRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,15 +26,15 @@ public class StoreService {
     }
 
     public Optional<StoreEntity> findStoreById(Long id) {
-        if(storeRepository.findById(id).isPresent()){
+        if (storeRepository.findById(id).isPresent()) {
             return storeRepository.findById(id);
-        }else throw new NotFoundException("Could not find store with id " + id);
+        } else throw new NotFoundException("Could not find store with id " + id);
     }
 
     public Optional<DepartmentEntity> findDepartmentById(Long id) {
-        if(departmentRepository.findById(id).isPresent()){
+        if (departmentRepository.findById(id).isPresent()) {
             return departmentRepository.findById(id);
-        }else throw new NotFoundException("Could not find department with id " + id);
+        } else throw new NotFoundException("Could not find department with id " + id);
     }
 
     public List<StoreEntity> getAllStores() {
@@ -54,8 +53,15 @@ public class StoreService {
 
     public void deleteStore(Long id) {
         Optional<StoreEntity> foundStore = storeRepository.findById(id);
+
+        List<DepartmentEntity> departments = foundStore.get().getDepartmentList();
+        if (departments != null) {
+            for (DepartmentEntity department : departments) {
+                department.setStore(null);
+            }
+            foundStore.get().setDepartmentList(null);
+        }
         storeRepository.delete(foundStore.get());
-        //TODO fix this!!!!!!!!!!!
     }
 
 

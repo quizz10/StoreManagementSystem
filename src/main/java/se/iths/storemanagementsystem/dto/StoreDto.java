@@ -3,7 +3,6 @@ package se.iths.storemanagementsystem.dto;
 import se.iths.storemanagementsystem.entity.DepartmentEntity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class StoreDto {
@@ -39,14 +38,13 @@ public class StoreDto {
 
     public List<String> getDepartmentList() {
 
-        if(!departmentList.isEmpty()) {
+        if (!departmentList.isEmpty()) {
             List<String> nameList = new ArrayList<>();
             for (DepartmentEntity department : departmentList) {
                 nameList.add(department.getDepartmentName());
             }
             return nameList;
         }
-       // TODO: kom på en bättre lösning för f-n...
         return List.of("No Departments in store");
     }
 

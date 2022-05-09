@@ -24,7 +24,7 @@ public class StorePrincipal implements UserDetails {
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>(roles.size());
 
         for (RoleEntity role : roles) {
-           grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
         return grantedAuthorities;
     }

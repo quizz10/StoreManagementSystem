@@ -2,14 +2,11 @@ package se.iths.storemanagementsystem.service;
 
 import org.springframework.stereotype.Service;
 import se.iths.storemanagementsystem.entity.ItemEntity;
-import se.iths.storemanagementsystem.entity.UserEntity;
+import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
 import se.iths.storemanagementsystem.repository.ItemRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
-
-import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
 
 @Service
 public class ItemService {
@@ -48,12 +45,7 @@ public class ItemService {
             setFields(item, foundItem);
         } else {
             throw new RuntimeException("Could not find");
-        }//        if (foundItem.isPresent()){
-//            foundItem.get().setName(item.get().getName());
-//            foundItem.get().setPrice(item.get().getPrice());
-//        } else {
-//            // insert exception here
-//        }
+        }
         itemRepository.save(foundItem.get());
         return foundItem;
     }

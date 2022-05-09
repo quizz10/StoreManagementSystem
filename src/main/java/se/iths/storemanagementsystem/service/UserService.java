@@ -65,12 +65,7 @@ public class UserService {
     public void deleteUser(Long id) {
         Optional<UserEntity> foundCustomer = findUserById(id);
         foundCustomer.get().setShoppingCart(null);
-
-//        for (RoleEntity role : foundCustomer.get().getRoles()) {
-//            foundCustomer.get().removeRole(role);
-//        }
         foundCustomer.get().setRoles(null);
-
         userRepository.delete(foundCustomer.get());
     }
 
@@ -87,8 +82,7 @@ public class UserService {
         Optional<UserEntity> foundUser = userRepository.findById(id);
         RoleEntity role = roleRepository.findByName(roleName);
         if (role == null) {
-            // throw new WebApplicationException()
-            //Todo: Add custom exception for null role ^
+            throw new NotFoundException("Could not find role with name " + roleName);
         }
         foundUser.get().addRole(role);
         userRepository.save(foundUser.get());

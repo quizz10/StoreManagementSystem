@@ -31,7 +31,6 @@ public class UserDto {
     }
 
 
-
     public Long getId() {
         return id;
     }
@@ -49,7 +48,7 @@ public class UserDto {
     }
 
     public String getShoppingCart() {
-        if(shoppingCart != null) {
+        if (shoppingCart != null) {
             return "ID: " + shoppingCart.getId().toString();
         }
         return "No shoppingcart found.";
@@ -62,7 +61,7 @@ public class UserDto {
     public List<String> getRoles() {
 
         List<String> roleNames = new ArrayList<>();
-        for(RoleEntity role : roles) {
+        for (RoleEntity role : roles) {
             roleNames.add(role.getName());
         }
         return roleNames;
@@ -74,7 +73,7 @@ public class UserDto {
 
     public String getDepartment() {
 
-        if(department != null) {
+        if (department != null) {
             RoleEntity foundRole = roles.stream()
                     .filter(role -> role.getName().equals("ROLE_EMPLOYEE")).findAny()
                     .orElse(null);

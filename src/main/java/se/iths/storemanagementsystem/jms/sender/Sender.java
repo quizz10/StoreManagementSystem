@@ -1,7 +1,6 @@
 package se.iths.storemanagementsystem.jms.sender;
 
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import se.iths.storemanagementsystem.entity.UserEntity;
 import se.iths.storemanagementsystem.jms.config.JmsConfig;

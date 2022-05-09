@@ -23,7 +23,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
-    // CUSTOM EXCEPTION
     @ExceptionHandler({ShortPasswordException.class})
     public ResponseEntity<Object> shortPasswordException(ShortPasswordException e) {
         logger.info(e.getClass().getName());
@@ -31,6 +30,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, errorMessage, e));
     }
+
     @ExceptionHandler({DuplicateEmailException.class})
     public ResponseEntity<Object> duplicateEmailException(DuplicateEmailException d) {
         logger.info(d.getClass().getName());
@@ -38,6 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, errorMessage, d));
     }
+
     @ExceptionHandler({WrongEmailFormatException.class})
     public ResponseEntity<Object> wrongEmailFormatException(WrongEmailFormatException w) {
         logger.info(w.getClass().getName());
@@ -46,7 +47,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, errorMessage, w));
     }
 
-    // BASE EXCEPTION
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(
             HttpMessageNotReadableException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -55,7 +55,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, errorMessage, e));
     }
 
-    // ALL EXCEPTIONS
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAll(Exception e) {
         logger.info(e.getClass().getName());

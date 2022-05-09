@@ -20,7 +20,8 @@ public class RoleEntity {
         this.name = name;
     }
 
-    public RoleEntity() {}
+    public RoleEntity() {
+    }
 
     public Long getId() {
         return id;

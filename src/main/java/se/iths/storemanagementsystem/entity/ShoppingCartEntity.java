@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 public class ShoppingCartEntity {
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private double totalPrice;
@@ -21,24 +21,25 @@ public class ShoppingCartEntity {
     private UserEntity user;
 
 
-    public ShoppingCartEntity(){
+    public ShoppingCartEntity() {
 
     }
 
-    public void addItem(ItemEntity item){
+    public void addItem(ItemEntity item) {
         items.add(item);
     }
-    //TODO om vi pallar. Fixa så man kan ha fler av samma vara.....
 
-    public void removeItem(Optional<ItemEntity> item){
+    public void removeItem(Optional<ItemEntity> item) {
         items.remove(item.get());
     }
-    
+
     public void setUser(UserEntity user) {
         this.user = user;
     }
 
-    public void removeUser(UserEntity user) { this.user = null; }
+    public void removeUser(UserEntity user) {
+        this.user = null;
+    }
 
     public Long getId() {
         return id;

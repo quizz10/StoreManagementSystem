@@ -20,7 +20,8 @@ public class MessageObject {
         this.localDatetime = localDatetime;
     }
 
-    public MessageObject() {}
+    public MessageObject() {
+    }
 
     public UUID getId() {
         return id;

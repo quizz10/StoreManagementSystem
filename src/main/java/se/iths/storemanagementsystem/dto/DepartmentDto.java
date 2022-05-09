@@ -44,7 +44,7 @@ public class DepartmentDto {
 
     public List<String> getEmployeeList() {
         List<String> employees = new ArrayList<>();
-        for(UserEntity user : employeeList) {
+        for (UserEntity user : employeeList) {
             employees.add(user.getEmail());
         }
         return employees;
@@ -55,7 +55,7 @@ public class DepartmentDto {
     }
 
     public String getStore() {
-        if(store != null) {
+        if (store != null) {
             return store.getStoreName();
         } else
             return "";

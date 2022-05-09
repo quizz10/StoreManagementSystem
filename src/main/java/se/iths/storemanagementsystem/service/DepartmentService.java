@@ -13,7 +13,6 @@ import se.iths.storemanagementsystem.repository.UserRepository;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class DepartmentService {
@@ -34,9 +33,9 @@ public class DepartmentService {
     }
 
     public Optional<DepartmentEntity> findDepartmentById(Long id) {
-        if(departmentRepository.findById(id).isPresent()){
+        if (departmentRepository.findById(id).isPresent()) {
             return departmentRepository.findById(id);
-        }else throw new NotFoundException("Could not find department with id " + id);
+        } else throw new NotFoundException("Could not find department with id " + id);
     }
 
     public List<DepartmentEntity> getAllDepartments() {
@@ -61,11 +60,11 @@ public class DepartmentService {
         if (store != null) {
             store.removeDepartment(foundDepartment.get());
         }
-        for(UserEntity user : foundDepartment.get().getEmployeeList()) {
+        for (UserEntity user : foundDepartment.get().getEmployeeList()) {
             user.setDepartment(null);
         }
         foundDepartment.get().setEmployeeList(null);
-        for(ItemEntity item : foundDepartment.get().getItemList()) {
+        for (ItemEntity item : foundDepartment.get().getItemList()) {
             item.setDepartment(null);
         }
 

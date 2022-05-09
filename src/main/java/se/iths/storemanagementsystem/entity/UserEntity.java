@@ -25,7 +25,6 @@ public class UserEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<RoleEntity> roles = new HashSet<>();
     @ManyToOne(cascade = CascadeType.ALL)
-//    @Transient
     private DepartmentEntity department;
 
 
@@ -34,7 +33,8 @@ public class UserEntity {
         this.password = password;
     }
 
-    public UserEntity() {}
+    public UserEntity() {
+    }
 
     @JsonIgnore
     public DepartmentEntity getDepartment() {
@@ -60,7 +60,6 @@ public class UserEntity {
     public void setId(Long id) {
         this.id = id;
     }
-
 
 
     public String getEmail() {

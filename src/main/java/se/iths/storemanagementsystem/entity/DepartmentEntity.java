@@ -15,7 +15,7 @@ public class DepartmentEntity {
     private Long id;
 
     @Size(min = 2)
-    @Column(unique=true)
+    @Column(unique = true)
     private String departmentName;
 
     @OneToMany(cascade = CascadeType.PERSIST)
@@ -28,12 +28,12 @@ public class DepartmentEntity {
     @OneToMany(cascade = CascadeType.PERSIST)
     private List<ItemEntity> itemList = new ArrayList<>();
 
-    public void addItem (ItemEntity item){
+    public void addItem(ItemEntity item) {
         itemList.add(item);
         item.setDepartment(this);
     }
 
-    public void removeItem(ItemEntity item){
+    public void removeItem(ItemEntity item) {
         itemList.remove(item);
         item.setDepartment(null);
     }

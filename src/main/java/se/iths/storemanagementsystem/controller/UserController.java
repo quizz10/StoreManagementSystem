@@ -32,18 +32,18 @@ public class UserController {
     }
 
     @PatchMapping("employee/updaterole/{id}")
-    public ResponseEntity<UserDto> updateRole(@PathVariable Long id, @RequestParam String role){
+    public ResponseEntity<UserDto> updateRole(@PathVariable Long id, @RequestParam String role) {
         Optional<UserEntity> user = userService.updateUserRole(id, role);
         return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
     }
 
     @GetMapping("user/setup")
-    public void setupDb(){
-        if(!userService.getAllUsersAsList().isEmpty()) {
+    public void setupDb() {
+        if (!userService.getAllUsersAsList().isEmpty()) {
             isSetup = true;
         }
 
-        if (!isSetup){
+        if (!isSetup) {
             userService.addInitialAdmin();
             isSetup = true;
         }
@@ -51,13 +51,12 @@ public class UserController {
 
     @GetMapping("user/{id}")
     public ResponseEntity<UserDto> findUser(@PathVariable Long id) {
-//        notFoundError(id);
         Optional<UserEntity> foundUser = userService.findUserById(id);
         return new ResponseEntity<>(modelMapper.map(foundUser, UserDto.class), HttpStatus.OK);
     }
 
     @GetMapping("user")
-    public ResponseEntity<List<UserDto>> findAllUsers() { // får no body istället för exception i insomnia
+    public ResponseEntity<List<UserDto>> findAllUsers() {
         List<UserDto> foundUsers = userService.getAllUsersAsList().stream()
                 .map(user -> modelMapper.map(user, UserDto.class)).toList();
 
@@ -69,8 +68,7 @@ public class UserController {
 
     @PatchMapping("employee/updateuser/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody Optional<UserEntity> user) {
-//            notFoundError(id);
-            Optional<UserEntity> updatedUser = userService.updateUser(id, user);
+        Optional<UserEntity> updatedUser = userService.updateUser(id, user);
         return new ResponseEntity<>(modelMapper.map(updatedUser, UserDto.class), HttpStatus.OK);
     }
 
@@ -80,11 +78,4 @@ public class UserController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-//    public ResponseEntity<Object> notFoundError(Long id) {
-//        if (userService.findUserById(id).isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return null;
-//    }
 }

@@ -63,10 +63,14 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        Optional<UserEntity> foundCustomer = findUserById(id);
-        foundCustomer.get().setShoppingCart(null);
-        foundCustomer.get().setRoles(null);
-        userRepository.delete(foundCustomer.get());
+        Optional<UserEntity> foundUser = findUserById(id);
+        foundUser.get().setShoppingCart(null);
+        if(foundUser.get().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"))){
+            foundUser.get().getDepartment().removeEmployee(foundUser.get());
+            foundUser.get().setDepartment(null);
+        }
+        foundUser.get().setRoles(null);
+        userRepository.delete(foundUser.get());
     }
 
     private void setFields(Optional<UserEntity> userEntity, Optional<UserEntity> foundUser) {

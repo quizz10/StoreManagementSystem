@@ -39,10 +39,14 @@ public class UserController {
 
     @GetMapping("user/setup")
     public void setupDb(){
+        if(!userService.getAllUsersAsList().isEmpty()) {
+            isSetup = true;
+        }
+
         if (!isSetup){
             userService.addInitialAdmin();
+            isSetup = true;
         }
-        isSetup = true;
     }
 
     @GetMapping("user/{id}")

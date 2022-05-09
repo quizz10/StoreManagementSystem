@@ -5,6 +5,7 @@ import se.iths.storemanagementsystem.entity.DepartmentEntity;
 import se.iths.storemanagementsystem.entity.ItemEntity;
 import se.iths.storemanagementsystem.entity.StoreEntity;
 import se.iths.storemanagementsystem.entity.UserEntity;
+import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
 import se.iths.storemanagementsystem.repository.DepartmentRepository;
 import se.iths.storemanagementsystem.repository.ItemRepository;
 import se.iths.storemanagementsystem.repository.UserRepository;
@@ -33,7 +34,9 @@ public class DepartmentService {
     }
 
     public Optional<DepartmentEntity> findDepartmentById(Long id) {
-        return Optional.ofNullable(departmentRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if(departmentRepository.findById(id).isPresent()){
+            return departmentRepository.findById(id);
+        }else throw new NotFoundException("Could not find department with id " + id);
     }
 
     public List<DepartmentEntity> getAllDepartments() {

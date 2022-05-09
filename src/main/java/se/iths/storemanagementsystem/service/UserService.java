@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 import se.iths.storemanagementsystem.entity.*;
 import se.iths.storemanagementsystem.exceptions.customexceptions.DuplicateEmailException;
+import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
 import se.iths.storemanagementsystem.exceptions.customexceptions.ShortPasswordException;
 import se.iths.storemanagementsystem.exceptions.customexceptions.WrongEmailFormatException;
 import se.iths.storemanagementsystem.jms.sender.Sender;
@@ -39,36 +40,61 @@ public class UserService {
         this.jmsSender = jmsSender;
     }
 
-
-    public UserEntity addUser(UserEntity userEntity) {
-        if (userEntity.getPassword().length() < 8) {
-            throw new ShortPasswordException("Password too short, minimum 8 characters.");
-        }
-
-        UserEntity savedUser = null;
-        userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
-        RoleEntity role = roleRepository.findByName("ROLE_USER");
-        userEntity.addRole(role);
-
-        ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
-        userEntity.setShoppingCart(shoppingCart);
-        shoppingCart.setUser(userEntity);
-        shoppingCartRepository.save(shoppingCart);
-        try {
-            savedUser = userRepository.save(userEntity);
-        } catch (TransactionSystemException  | DataIntegrityViolationException t) {
-            if (t.getMessage().startsWith("could not execute")) {
-                throw new DuplicateEmailException("There already is a user with that email");
-            }
-            if(t.getMessage().startsWith("Could not commit"))
-            throw new WrongEmailFormatException("Email format is invalid.");
-        }
-
-        //jmsSender.sendMessage(savedUser);
-        return savedUser;
+    public Optional<UserEntity> findUserById(Long id) {
+        if (userRepository.findById(id).isPresent()) {
+            return userRepository.findById(id);
+        } else throw new NotFoundException("Could not find user with id " + id);
     }
 
-    // Method for adding an admin and setting up admin+customer roles, is run only once.
+    public List<UserEntity> getAllUsersAsList() {
+        return userRepository.findAll();
+    }
+
+    public Optional<UserEntity> updateUser(Long id, Optional<UserEntity> userEntity) {
+        Optional<UserEntity> foundUser = userRepository.findById(id);
+
+        if (foundUser.isPresent()) {
+            setFields(userEntity, foundUser);
+        } else {
+            throw new RuntimeException("Could not find");
+        }
+        userRepository.save(foundUser.get());
+        return foundUser;
+    }
+
+    public void deleteUser(Long id) {
+        Optional<UserEntity> foundCustomer = findUserById(id);
+        foundCustomer.get().setShoppingCart(null);
+
+//        for (RoleEntity role : foundCustomer.get().getRoles()) {
+//            foundCustomer.get().removeRole(role);
+//        }
+        foundCustomer.get().setRoles(null);
+
+        userRepository.delete(foundCustomer.get());
+    }
+
+    private void setFields(Optional<UserEntity> userEntity, Optional<UserEntity> foundUser) {
+        if (!(userEntity.get().getEmail() == null)) {
+            foundUser.get().setEmail(userEntity.get().getEmail());
+        }
+        if (!(userEntity.get().getPassword() == null)) {
+            foundUser.get().setPassword(bCryptPasswordEncoder.encode(userEntity.get().getPassword()));
+        }
+    }
+
+    public Optional<UserEntity> updateUserRole(Long id, String roleName) {
+        Optional<UserEntity> foundUser = userRepository.findById(id);
+        RoleEntity role = roleRepository.findByName(roleName);
+        if (role == null) {
+            // throw new WebApplicationException()
+            //Todo: Add custom exception for null role ^
+        }
+        foundUser.get().addRole(role);
+        userRepository.save(foundUser.get());
+        return Optional.ofNullable(foundUser).orElseThrow(EntityNotFoundException::new);
+    }
+
     public void addInitialAdmin() {
         StoreEntity store = new StoreEntity("ICA");
 
@@ -105,61 +131,31 @@ public class UserService {
 
     }
 
-    public Optional<UserEntity> updateUserRole(Long id, String roleName) {
-        Optional<UserEntity> foundUser = userRepository.findById(id);
-        RoleEntity role = roleRepository.findByName(roleName);
-        if (role == null) {
-            // throw new WebApplicationException()
-            //Todo: Add custom exception for null role ^
+    public UserEntity addUser(UserEntity userEntity) {
+        if (userEntity.getPassword().length() < 8) {
+            throw new ShortPasswordException("Password too short, minimum 8 characters.");
         }
-        foundUser.get().addRole(role);
-        userRepository.save(foundUser.get());
-        return Optional.ofNullable(foundUser).orElseThrow(EntityNotFoundException::new);
-    }
 
-    public Optional<UserEntity> findUserById(Long id) {
-        return Optional.ofNullable(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-    }
+        UserEntity savedUser = null;
+        userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
+        RoleEntity role = roleRepository.findByName("ROLE_USER");
+        userEntity.addRole(role);
 
-    public Iterable<UserEntity> findAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public List<UserEntity> getAllUsersAsList() {
-        return userRepository.findAll();
-    }
-
-    public Optional<UserEntity> updateUser(Long id, Optional<UserEntity> userEntity) {
-        Optional<UserEntity> foundUser = userRepository.findById(id);
-
-        if (foundUser.isPresent()) {
-            setFields(userEntity, foundUser);
-        } else {
-            throw new RuntimeException("Could not find");
+        ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
+        userEntity.setShoppingCart(shoppingCart);
+        shoppingCart.setUser(userEntity);
+        shoppingCartRepository.save(shoppingCart);
+        try {
+            savedUser = userRepository.save(userEntity);
+        } catch (TransactionSystemException | DataIntegrityViolationException t) {
+            if (t.getMessage().startsWith("could not execute")) {
+                throw new DuplicateEmailException("There already is a user with that email");
+            }
+            if (t.getMessage().startsWith("Could not commit"))
+                throw new WrongEmailFormatException("Email format is invalid.");
         }
-        userRepository.save(foundUser.get());
-        return foundUser;
-    }
 
-    public void deleteUser(Long id) {
-        Optional<UserEntity> foundCustomer = findUserById(id);
-        foundCustomer.get().setShoppingCart(null);
-
-//        for (RoleEntity role : foundCustomer.get().getRoles()) {
-//            foundCustomer.get().removeRole(role);
-//        }
-        foundCustomer.get().setRoles(null);
-
-        userRepository.delete(foundCustomer.get());
-    }
-
-
-    private void setFields(Optional<UserEntity> userEntity, Optional<UserEntity> foundUser) {
-        if (!(userEntity.get().getEmail() == null)) {
-            foundUser.get().setEmail(userEntity.get().getEmail());
-        }
-        if (!(userEntity.get().getPassword() == null)) {
-            foundUser.get().setPassword(bCryptPasswordEncoder.encode(userEntity.get().getPassword()));
-        }
+        //jmsSender.sendMessage(savedUser);
+        return savedUser;
     }
 }

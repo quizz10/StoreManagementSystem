@@ -9,6 +9,8 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
+
 @Service
 public class ItemService {
 
@@ -23,7 +25,10 @@ public class ItemService {
     }
 
     public Optional<ItemEntity> findItemById(Long id) {
-        return Optional.ofNullable(itemRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if (itemRepository.findById(id).isPresent()) {
+            return itemRepository.findById(id);
+        } else throw new NotFoundException("Could not find item with id " + id);
+
     }
 
     public Iterable<ItemEntity> getAllItems() {

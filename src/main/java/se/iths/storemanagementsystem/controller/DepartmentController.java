@@ -107,11 +107,7 @@ public class DepartmentController {
     }
 
 
-//    private void notFoundError(Long id) {
-//        if (!departmentService.findDepartmentById(id).isPresent()) {
-//            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(new JsonFormatter(404, "ID: " + id + " not found")).build());
-//        }
-//    }
+
 
 
 }

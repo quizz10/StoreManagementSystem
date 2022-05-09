@@ -3,6 +3,7 @@ package se.iths.storemanagementsystem.service;
 import org.springframework.stereotype.Service;
 import se.iths.storemanagementsystem.entity.ItemEntity;
 import se.iths.storemanagementsystem.entity.ShoppingCartEntity;
+import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
 import se.iths.storemanagementsystem.repository.ItemRepository;
 import se.iths.storemanagementsystem.repository.ShoppingCartRepository;
 
@@ -27,11 +28,16 @@ public class ShoppingCartService {
     }
 
     public Optional<ShoppingCartEntity> findShoppingCartById(Long id) {
-        return Optional.ofNullable(shoppingCartRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if(shoppingCartRepository.findById(id).isPresent()){
+            return shoppingCartRepository.findById(id);
+        }else throw new NotFoundException("Could not find shopping cart with id " + id);
     }
 
     public Optional<ItemEntity> findItemById(Long id) {
-        return Optional.ofNullable(itemRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if(itemRepository.findById(id).isPresent()){
+            return itemRepository.findById(id);
+        }else throw new NotFoundException("Could not find item with id " + id);
+
     }
 
     public Optional<ShoppingCartEntity> linkItemToShoppingCart(Long cartId, Long itemId) {

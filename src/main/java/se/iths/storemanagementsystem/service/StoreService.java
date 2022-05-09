@@ -3,6 +3,7 @@ package se.iths.storemanagementsystem.service;
 import org.springframework.stereotype.Service;
 import se.iths.storemanagementsystem.entity.DepartmentEntity;
 import se.iths.storemanagementsystem.entity.StoreEntity;
+import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
 import se.iths.storemanagementsystem.repository.DepartmentRepository;
 import se.iths.storemanagementsystem.repository.StoreRepository;
 
@@ -26,11 +27,15 @@ public class StoreService {
     }
 
     public Optional<StoreEntity> findStoreById(Long id) {
-        return Optional.ofNullable(storeRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if(storeRepository.findById(id).isPresent()){
+            return storeRepository.findById(id);
+        }else throw new NotFoundException("Could not find store with id " + id);
     }
 
     public Optional<DepartmentEntity> findDepartmentById(Long id) {
-        return Optional.ofNullable(departmentRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if(departmentRepository.findById(id).isPresent()){
+            return departmentRepository.findById(id);
+        }else throw new NotFoundException("Could not find department with id " + id);
     }
 
     public List<StoreEntity> getAllStores() {

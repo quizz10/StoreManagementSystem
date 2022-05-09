@@ -93,7 +93,7 @@ public class UserService {
         return Optional.ofNullable(foundUser).orElseThrow(EntityNotFoundException::new);
     }
 
-    public void addInitialAdmin() {
+    public void initialSetup() {
         StoreEntity store = new StoreEntity("ICA");
 
         DepartmentEntity frukt = new DepartmentEntity("Frukt & Grönt");
@@ -105,7 +105,6 @@ public class UserService {
         UserEntity customer = new UserEntity("testuser@ica.se", bCryptPasswordEncoder.encode("123123123123"));
         UserEntity employee = new UserEntity("employee@ica.se", bCryptPasswordEncoder.encode("123123123123"));
 
-
         roleRepository.save(new RoleEntity("ROLE_ADMIN"));
         roleRepository.save(new RoleEntity("ROLE_USER"));
         roleRepository.save(new RoleEntity("ROLE_EMPLOYEE"));
@@ -113,6 +112,10 @@ public class UserService {
         employee.addRole(roleRepository.findByName("ROLE_EMPLOYEE"));
         admin.addRole(roleRepository.findByName("ROLE_ADMIN"));
         customer.addRole(roleRepository.findByName("ROLE_USER"));
+
+        ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
+        shoppingCart.setUser(customer);
+        shoppingCartRepository.save(shoppingCart);
 
         store.addDepartment(frukt);
         frukt.addEmployee(employee);

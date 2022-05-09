@@ -31,7 +31,7 @@ public class UserController {
         return new ResponseEntity<>(modelMapper.map(savedUser, UserDto.class), HttpStatus.CREATED);
     }
 
-    @PatchMapping("employee/updaterole/{id}")
+    @PatchMapping("admin/updaterole/{id}")
     public ResponseEntity<UserDto> updateRole(@PathVariable Long id, @RequestParam String role) {
         Optional<UserEntity> user = userService.updateUserRole(id, role);
         return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
@@ -44,7 +44,7 @@ public class UserController {
         }
 
         if (!isSetup) {
-            userService.addInitialAdmin();
+            userService.initialSetup();
             isSetup = true;
         }
     }

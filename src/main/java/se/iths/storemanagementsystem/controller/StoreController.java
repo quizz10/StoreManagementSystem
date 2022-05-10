@@ -59,13 +59,6 @@ public class StoreController {
     }
 
 
-    @DeleteMapping("store/{id}")
-    public ResponseEntity<Void> deleteStore(@PathVariable("id") Long id) {
-        storeService.deleteStore(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
     @PatchMapping("store/link/{storeId}/{departmentId}")
     public ResponseEntity<StoreDto> linkDepartmentToStore(@PathVariable("storeId") Long storeId, @PathVariable("departmentId") Long departmentId) {
 
@@ -81,5 +74,11 @@ public class StoreController {
         Optional<StoreEntity> store = storeService.unlinkDepartmentFromStore(storeId, departmentId);
 
         return new ResponseEntity<>(modelMapper.map(store, StoreDto.class), HttpStatus.OK);
+    }
+
+    @DeleteMapping("store/{id}")
+    public ResponseEntity<Void> deleteStore(@PathVariable("id") Long id) {
+        storeService.deleteStore(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

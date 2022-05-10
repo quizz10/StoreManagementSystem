@@ -51,20 +51,6 @@ public class StoreService {
         return foundStore.get();
     }
 
-    public void deleteStore(Long id) {
-        Optional<StoreEntity> foundStore = findStoreById(id);
-
-        List<DepartmentEntity> departments = foundStore.get().getDepartmentList();
-        if (departments != null) {
-            for (DepartmentEntity department : departments) {
-                department.setStore(null);
-            }
-            foundStore.get().setDepartmentList(null);
-        }
-        storeRepository.delete(foundStore.get());
-    }
-
-
     public Optional<StoreEntity> linkDepartmentToStore(Long storeId, Long departmentId) {
         Optional<StoreEntity> foundStore = findStoreById(storeId);
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
@@ -85,4 +71,18 @@ public class StoreService {
         storeRepository.save(foundStore.get());
         return foundStore;
     }
+
+    public void deleteStore(Long id) {
+        Optional<StoreEntity> foundStore = findStoreById(id);
+
+        List<DepartmentEntity> departments = foundStore.get().getDepartmentList();
+        if (departments != null) {
+            for (DepartmentEntity department : departments) {
+                department.setStore(null);
+            }
+            foundStore.get().setDepartmentList(null);
+        }
+        storeRepository.delete(foundStore.get());
+    }
+
 }

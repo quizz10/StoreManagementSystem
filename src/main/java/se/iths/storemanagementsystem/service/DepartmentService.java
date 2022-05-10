@@ -36,11 +36,71 @@ public class DepartmentService {
         return departmentRepository.findAll();
     }
 
+    public Optional<DepartmentEntity> findDepartmentById(Long id) {
+        if (departmentRepository.findById(id).isPresent()) {
+            return departmentRepository.findById(id);
+        } else throw new NotFoundException("Could not find department with id " + id);
+    }
+
+    public Optional<UserEntity> findUserById(Long id) {
+        if (userRepository.findById(id).isPresent()) {
+            return userRepository.findById(id);
+        } else throw new NotFoundException("Could not find user with id " + id);
+    }
+
+    public Optional<ItemEntity> findItemById(Long id) {
+        if (itemRepository.findById(id).isPresent()) {
+            return itemRepository.findById(id);
+        } else throw new NotFoundException("Could not find item with id " + id);
+
+    }
+
     public Optional<DepartmentEntity> updateDepartment(Long id, String departmentName) {
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(id);
 
         setFields(departmentName, foundDepartment);
 
+        departmentRepository.save(foundDepartment.get());
+        return foundDepartment;
+    }
+
+    public Optional<UserEntity> linkEmployeeToDepartment(Long departmentId, Long userId) {
+
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
+        Optional<UserEntity> foundUser = findUserById(userId);
+
+        if (foundUser.get().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE")) && !foundDepartment.get().getEmployeeList().contains(foundUser.get())) {
+            foundDepartment.get().addEmployee(foundUser.get());
+            departmentRepository.save(foundDepartment.get());
+        } else throw new AlreadyLinkedException("The entity that you are trying to link is already linked.");
+        return foundUser;
+    }
+
+    public Optional<UserEntity> unlinkEmployeeToDepartment(Long departmentId, Long userId) {
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
+        Optional<UserEntity> foundUser = findUserById(userId);
+        foundDepartment.get().removeEmployee(foundUser.get());
+        departmentRepository.save(foundDepartment.get());
+        return foundUser;
+    }
+
+    public Optional<DepartmentEntity> linkItemToDepartment(Long departmentId, Long itemId) {
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
+        Optional<ItemEntity> foundItem = findItemById(itemId);
+
+        if (!foundDepartment.get().getItemList().contains(foundItem.get())) {
+            foundDepartment.get().addItem(foundItem.get());
+            departmentRepository.save(foundDepartment.get());
+        } else throw new AlreadyLinkedException("The entity that you are trying to link is already linked.");
+
+        return foundDepartment;
+    }
+
+    public Optional<DepartmentEntity> unLinkItemFromDepartment(Long departmentId, Long itemId) {
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
+        Optional<ItemEntity> foundItem = findItemById(itemId);
+
+        foundDepartment.get().removeItem(foundItem.get());
         departmentRepository.save(foundDepartment.get());
         return foundDepartment;
     }
@@ -64,70 +124,10 @@ public class DepartmentService {
 
     }
 
-    public Optional<DepartmentEntity> findDepartmentById(Long id) {
-        if (departmentRepository.findById(id).isPresent()) {
-            return departmentRepository.findById(id);
-        } else throw new NotFoundException("Could not find department with id " + id);
-    }
-
-    public Optional<UserEntity> findUserById(Long id) {
-        if (userRepository.findById(id).isPresent()) {
-            return userRepository.findById(id);
-        } else throw new NotFoundException("Could not find user with id " + id);
-    }
-
-    public Optional<ItemEntity> findItemById(Long id) {
-        if (itemRepository.findById(id).isPresent()) {
-            return itemRepository.findById(id);
-        } else throw new NotFoundException("Could not find item with id " + id);
-
-    }
-
-
-    public Optional<UserEntity> linkEmployeeToDepartment(Long departmentId, Long userId) {
-
-        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
-        Optional<UserEntity> foundUser = findUserById(userId);
-
-        if (foundUser.get().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE")) && !foundDepartment.get().getEmployeeList().contains(foundUser.get())) {
-            foundDepartment.get().addEmployee(foundUser.get());
-            departmentRepository.save(foundDepartment.get());
-        } else throw new AlreadyLinkedException("The entity that you are trying to link is already linked.");
-        return foundUser;
-    }
-
-    public Optional<UserEntity> unlinkEmployeeToDepartment(Long departmentId, Long userId) {
-        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
-        Optional<UserEntity> foundUser = findUserById(userId);
-        foundDepartment.get().removeEmployee(foundUser.get());
-        departmentRepository.save(foundDepartment.get());
-        return foundUser;
-    }
 
     private void setFields(String departmentName, Optional<DepartmentEntity> foundDepartment) {
         if (!(departmentName == null)) {
             foundDepartment.get().setDepartmentName(departmentName);
         }
-    }
-
-    public Optional<DepartmentEntity> linkItemToDepartment(Long departmentId, Long itemId) {
-        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
-        Optional<ItemEntity> foundItem = findItemById(itemId);
-
-        if (!foundDepartment.get().getItemList().contains(foundItem.get())) {
-            foundDepartment.get().addItem(foundItem.get());
-            departmentRepository.save(foundDepartment.get());
-        } else throw new AlreadyLinkedException("The entity that you are trying to link is already linked.");
-
-        return foundDepartment;
-    }
-
-    public Optional<DepartmentEntity> unLinkItemFromDepartment(Long departmentId, Long itemId) {
-        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
-        Optional<ItemEntity> foundItem = findItemById(itemId);
-
-        foundDepartment.get().removeItem(foundItem.get());
-        departmentRepository.save(foundDepartment.get());
-        return foundDepartment;
     }
 }

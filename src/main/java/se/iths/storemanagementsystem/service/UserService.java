@@ -40,6 +40,34 @@ public class UserService {
         this.jmsSender = jmsSender;
     }
 
+    public UserEntity addUser(UserEntity userEntity) {
+        if (userEntity.getPassword().length() < 8) {
+            throw new ShortPasswordException("Password too short, minimum 8 characters.");
+        }
+
+        UserEntity savedUser = null;
+        userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
+        RoleEntity role = roleRepository.findByName("ROLE_USER");
+        userEntity.addRole(role);
+
+        ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
+        userEntity.setShoppingCart(shoppingCart);
+        shoppingCart.setUser(userEntity);
+        shoppingCartRepository.save(shoppingCart);
+        try {
+            savedUser = userRepository.save(userEntity);
+        } catch (TransactionSystemException | DataIntegrityViolationException t) {
+            if (t.getMessage().startsWith("could not execute")) {
+                throw new DuplicateEmailException("There already is a user with that email");
+            }
+            if (t.getMessage().startsWith("Could not commit"))
+                throw new WrongEmailFormatException("Email format is invalid.");
+        }
+
+        jmsSender.sendMessage(savedUser);
+        return savedUser;
+    }
+
     public Optional<UserEntity> findUserById(Long id) {
         if (userRepository.findById(id).isPresent()) {
             return userRepository.findById(id);
@@ -68,15 +96,6 @@ public class UserService {
         userRepository.delete(foundUser.get());
     }
 
-    private void setFields(Optional<UserEntity> userEntity, Optional<UserEntity> foundUser) {
-        if (!(userEntity.get().getEmail() == null)) {
-            foundUser.get().setEmail(userEntity.get().getEmail());
-        }
-        if (!(userEntity.get().getPassword() == null)) {
-            foundUser.get().setPassword(bCryptPasswordEncoder.encode(userEntity.get().getPassword()));
-        }
-    }
-
     public Optional<UserEntity> updateUserRole(Long id, String roleName) {
         Optional<UserEntity> foundUser = findUserById(id);
         RoleEntity role = roleRepository.findByName(roleName);
@@ -88,6 +107,15 @@ public class UserService {
         return Optional.ofNullable(foundUser).orElseThrow(EntityNotFoundException::new);
     }
 
+    private void setFields(Optional<UserEntity> userEntity, Optional<UserEntity> foundUser) {
+        if (!(userEntity.get().getEmail() == null)) {
+            foundUser.get().setEmail(userEntity.get().getEmail());
+        }
+        if (!(userEntity.get().getPassword() == null)) {
+            foundUser.get().setPassword(bCryptPasswordEncoder.encode(userEntity.get().getPassword()));
+        }
+    }
+
     public void initialSetup() {
         StoreEntity store = new StoreEntity("ICA");
 
@@ -97,7 +125,7 @@ public class UserService {
         ItemEntity banan = new ItemEntity("Banan", 29);
 
         UserEntity admin = new UserEntity("admin@admin.se", bCryptPasswordEncoder.encode("123123123123"));
-        UserEntity customer = new UserEntity("testuser@ica.se", bCryptPasswordEncoder.encode("123123123123"));
+        UserEntity user = new UserEntity("testuser@ica.se", bCryptPasswordEncoder.encode("123123123123"));
         UserEntity employee = new UserEntity("employee@ica.se", bCryptPasswordEncoder.encode("123123123123"));
 
         roleRepository.save(new RoleEntity("ROLE_ADMIN"));
@@ -106,11 +134,11 @@ public class UserService {
 
         employee.addRole(roleRepository.findByName("ROLE_EMPLOYEE"));
         admin.addRole(roleRepository.findByName("ROLE_ADMIN"));
-        customer.addRole(roleRepository.findByName("ROLE_USER"));
+        user.addRole(roleRepository.findByName("ROLE_USER"));
 
         ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
-        shoppingCart.setUser(customer);
-        customer.setShoppingCart(shoppingCart);
+        shoppingCart.setUser(user);
+        user.setShoppingCart(shoppingCart);
         shoppingCartRepository.save(shoppingCart);
 
         store.addDepartment(frukt);
@@ -122,37 +150,9 @@ public class UserService {
         departmentRepository.save(frukt);
         itemRepository.save(citron);
         itemRepository.save(banan);
-        userRepository.save(customer);
+        userRepository.save(user);
         userRepository.save(admin);
         userRepository.save(employee);
 
-    }
-
-    public UserEntity addUser(UserEntity userEntity) {
-        if (userEntity.getPassword().length() < 8) {
-            throw new ShortPasswordException("Password too short, minimum 8 characters.");
-        }
-
-        UserEntity savedUser = null;
-        userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
-        RoleEntity role = roleRepository.findByName("ROLE_USER");
-        userEntity.addRole(role);
-
-        ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
-        userEntity.setShoppingCart(shoppingCart);
-        shoppingCart.setUser(userEntity);
-        shoppingCartRepository.save(shoppingCart);
-        try {
-            savedUser = userRepository.save(userEntity);
-        } catch (TransactionSystemException | DataIntegrityViolationException t) {
-            if (t.getMessage().startsWith("could not execute")) {
-                throw new DuplicateEmailException("There already is a user with that email");
-            }
-            if (t.getMessage().startsWith("Could not commit"))
-                throw new WrongEmailFormatException("Email format is invalid.");
-        }
-
-        jmsSender.sendMessage(savedUser);
-        return savedUser;
     }
 }

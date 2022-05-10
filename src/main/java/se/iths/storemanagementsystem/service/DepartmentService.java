@@ -11,7 +11,6 @@ import se.iths.storemanagementsystem.repository.DepartmentRepository;
 import se.iths.storemanagementsystem.repository.ItemRepository;
 import se.iths.storemanagementsystem.repository.UserRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 

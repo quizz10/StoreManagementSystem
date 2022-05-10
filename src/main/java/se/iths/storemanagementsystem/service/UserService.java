@@ -52,7 +52,7 @@ public class UserService {
 
     public Optional<UserEntity> updateUser(Long id, Optional<UserEntity> userEntity) {
         Optional<UserEntity> foundUser = findUserById(id);
-            setFields(userEntity, foundUser);
+        setFields(userEntity, foundUser);
         userRepository.save(foundUser.get());
         return foundUser;
     }
@@ -60,7 +60,7 @@ public class UserService {
     public void deleteUser(Long id) {
         Optional<UserEntity> foundUser = findUserById(id);
         foundUser.get().setShoppingCart(null);
-        if(foundUser.get().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"))){
+        if (foundUser.get().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"))) {
             foundUser.get().getDepartment().removeEmployee(foundUser.get());
             foundUser.get().setDepartment(null);
         }
@@ -152,7 +152,7 @@ public class UserService {
                 throw new WrongEmailFormatException("Email format is invalid.");
         }
 
-//        jmsSender.sendMessage(savedUser);
+        jmsSender.sendMessage(savedUser);
         return savedUser;
     }
 }

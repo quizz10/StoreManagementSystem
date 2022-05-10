@@ -36,6 +36,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, errorMessage, d));
     }
+
     @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<Object> notFoundException(NotFoundException n) {
         logger.info(n.getClass().getName());

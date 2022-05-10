@@ -35,15 +35,15 @@ public class ItemService {
 
     public Optional<ItemEntity> updateItem(Long id, Optional<ItemEntity> item) {
         Optional<ItemEntity> foundItem = findItemById(id);
-
-
-        if (foundItem.isPresent()) {
-            setFields(item, foundItem);
-        } else {
-            throw new RuntimeException("Could not find");
-        }
+        setFields(item, foundItem);
         itemRepository.save(foundItem.get());
         return foundItem;
+    }
+
+    public void deleteItem(Long id) {
+        Optional<ItemEntity> foundItem = findItemById(id);
+
+        itemRepository.delete(foundItem.get());
     }
 
     private void setFields(Optional<ItemEntity> item, Optional<ItemEntity> foundItem) {
@@ -53,12 +53,6 @@ public class ItemService {
         if (!(item.get().getPrice() == 0)) {
             foundItem.get().setPrice(item.get().getPrice());
         }
-    }
-
-    public void deleteItem(Long id) {
-        Optional<ItemEntity> foundItem = findItemById(id);
-
-        itemRepository.delete(foundItem.get());
     }
 
 

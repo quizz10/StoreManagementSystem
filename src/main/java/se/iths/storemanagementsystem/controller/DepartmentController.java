@@ -59,12 +59,6 @@ public class DepartmentController {
         return new ResponseEntity<>(modelMapper.map(updateDepartment, DepartmentDto.class), HttpStatus.OK);
     }
 
-    @DeleteMapping("admin/department/{id}")
-    public ResponseEntity<Optional<Void>> deleteDepartment(@PathVariable("id") Long id) {
-        departmentService.deleteDepartment(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @PatchMapping("admin/department/linkemployee/{departmentid}/{userid}")
     public ResponseEntity<String> linkEmployeeToDepartment(@PathVariable("departmentid") Long departmentId, @PathVariable("userid") Long userId) {
         Optional<UserEntity> connectedEmployee = departmentService.linkEmployeeToDepartment(departmentId, userId);
@@ -92,5 +86,11 @@ public class DepartmentController {
         Optional<DepartmentEntity> department = departmentService.unLinkItemFromDepartment(departmentId, itemId);
         DepartmentDto departmentDto = modelMapper.map(department, DepartmentDto.class);
         return new ResponseEntity<>(("Successfully unlinked item with id " + itemId + " from department " + departmentDto.getDepartmentName()), HttpStatus.OK);
+    }
+
+    @DeleteMapping("admin/department/{id}")
+    public ResponseEntity<Optional<Void>> deleteDepartment(@PathVariable("id") Long id) {
+        departmentService.deleteDepartment(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

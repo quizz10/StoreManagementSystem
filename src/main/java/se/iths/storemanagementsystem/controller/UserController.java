@@ -31,24 +31,6 @@ public class UserController {
         return new ResponseEntity<>(modelMapper.map(savedUser, UserDto.class), HttpStatus.CREATED);
     }
 
-    @PatchMapping("admin/updaterole/{id}")
-    public ResponseEntity<UserDto> updateRole(@PathVariable Long id, @RequestParam String role) {
-        Optional<UserEntity> user = userService.updateUserRole(id, role);
-        return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
-    }
-
-    @GetMapping("user/setup")
-    public void setupDb() {
-        if (!userService.getAllUsersAsList().isEmpty()) {
-            isSetup = true;
-        }
-
-        if (!isSetup) {
-            userService.initialSetup();
-            isSetup = true;
-        }
-    }
-
     @GetMapping("user/{id}")
     public ResponseEntity<UserDto> findUser(@PathVariable Long id) {
         Optional<UserEntity> foundUser = userService.findUserById(id);
@@ -66,6 +48,12 @@ public class UserController {
         return new ResponseEntity<>(foundUsers, HttpStatus.OK);
     }
 
+    @PatchMapping("admin/updaterole/{id}")
+    public ResponseEntity<UserDto> updateRole(@PathVariable Long id, @RequestParam String role) {
+        Optional<UserEntity> user = userService.updateUserRole(id, role);
+        return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
+    }
+
     @PatchMapping("admin/updateuser/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody Optional<UserEntity> user) {
         Optional<UserEntity> updatedUser = userService.updateUser(id, user);
@@ -77,5 +65,17 @@ public class UserController {
         userService.deleteUser(id);
 
         return new ResponseEntity<>("Successfully deleted user with id " + id, HttpStatus.OK);
+    }
+
+    @GetMapping("user/setup")
+    public void setupDb() {
+        if (!userService.getAllUsersAsList().isEmpty()) {
+            isSetup = true;
+        }
+
+        if (!isSetup) {
+            userService.initialSetup();
+            isSetup = true;
+        }
     }
 }

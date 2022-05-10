@@ -66,16 +66,16 @@ public class UserController {
         return new ResponseEntity<>(foundUsers, HttpStatus.OK);
     }
 
-    @PatchMapping("employee/updateuser/{id}")
+    @PatchMapping("admin/updateuser/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody Optional<UserEntity> user) {
         Optional<UserEntity> updatedUser = userService.updateUser(id, user);
         return new ResponseEntity<>(modelMapper.map(updatedUser, UserDto.class), HttpStatus.OK);
     }
 
     @DeleteMapping("admin/deleteuser/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("Successfully deleted user with id " + id, HttpStatus.OK);
     }
 }

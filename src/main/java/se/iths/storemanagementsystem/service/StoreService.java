@@ -43,7 +43,7 @@ public class StoreService {
     }
 
     public StoreEntity updateStore(Long id, StoreEntity store) {
-        Optional<StoreEntity> foundStore = storeRepository.findById(id);
+        Optional<StoreEntity> foundStore = findStoreById(id);
         if (store.getStoreName() != null) {
             foundStore.get().setStoreName(store.getStoreName());
             storeRepository.save(foundStore.get());
@@ -52,7 +52,7 @@ public class StoreService {
     }
 
     public void deleteStore(Long id) {
-        Optional<StoreEntity> foundStore = storeRepository.findById(id);
+        Optional<StoreEntity> foundStore = findStoreById(id);
 
         List<DepartmentEntity> departments = foundStore.get().getDepartmentList();
         if (departments != null) {
@@ -66,8 +66,8 @@ public class StoreService {
 
 
     public Optional<StoreEntity> linkDepartmentToStore(Long storeId, Long departmentId) {
-        Optional<StoreEntity> foundStore = storeRepository.findById(storeId);
-        Optional<DepartmentEntity> foundDepartment = departmentRepository.findById(departmentId);
+        Optional<StoreEntity> foundStore = findStoreById(storeId);
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
 
         foundDepartment.get().setStore(foundStore.get());
         foundStore.get().getDepartmentList().add(foundDepartment.get());
@@ -78,7 +78,7 @@ public class StoreService {
 
     public Optional<StoreEntity> unlinkDepartmentFromStore(Long storeId, Long departmentId) {
         Optional<StoreEntity> foundStore = storeRepository.findById(storeId);
-        Optional<DepartmentEntity> foundDepartment = departmentRepository.findById(departmentId);
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
 
         foundStore.get().getDepartmentList().remove(foundDepartment.get());
         foundDepartment.get().setStore(null);

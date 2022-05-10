@@ -28,17 +28,13 @@ public class ItemService {
 
     }
 
-    public Iterable<ItemEntity> getAllItems() {
-        return itemRepository.findAll();
-    }
-
     public List<ItemEntity> getAllItemsAsList() {
         return itemRepository.findAll();
     }
 
 
     public Optional<ItemEntity> updateItem(Long id, Optional<ItemEntity> item) {
-        Optional<ItemEntity> foundItem = itemRepository.findById(id);
+        Optional<ItemEntity> foundItem = findItemById(id);
 
 
         if (foundItem.isPresent()) {

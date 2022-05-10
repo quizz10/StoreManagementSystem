@@ -21,11 +21,6 @@ public class ShoppingCartService {
         this.itemRepository = itemRepository;
     }
 
-    public Optional<ShoppingCartEntity> createShoppingCart(ShoppingCartEntity shoppingCart) {
-        ShoppingCartEntity cart = shoppingCartRepository.save(shoppingCart);
-        return Optional.ofNullable(cart);
-    }
-
     public Optional<ShoppingCartEntity> findShoppingCartById(Long id) {
         if (shoppingCartRepository.findById(id).isPresent()) {
             return shoppingCartRepository.findById(id);
@@ -40,8 +35,8 @@ public class ShoppingCartService {
     }
 
     public Optional<ShoppingCartEntity> linkItemToShoppingCart(Long cartId, Long itemId) {
-        Optional<ShoppingCartEntity> foundCart = shoppingCartRepository.findById(cartId);
-        Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
+        Optional<ShoppingCartEntity> foundCart = findShoppingCartById(cartId);
+        Optional<ItemEntity> foundItem = findItemById(itemId);
 
         foundCart.get().addItem(foundItem.get());
         shoppingCartRepository.save(foundCart.get());
@@ -50,8 +45,8 @@ public class ShoppingCartService {
     }
 
     public Optional<ShoppingCartEntity> unlinkItemFromShoppingCart(Long cartId, Long itemId) {
-        Optional<ShoppingCartEntity> foundCart = shoppingCartRepository.findById(cartId);
-        Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
+        Optional<ShoppingCartEntity> foundCart = findShoppingCartById(cartId);
+        Optional<ItemEntity> foundItem = findItemById(itemId);
 
         foundCart.get().removeItem(foundItem);
         shoppingCartRepository.save(foundCart.get());

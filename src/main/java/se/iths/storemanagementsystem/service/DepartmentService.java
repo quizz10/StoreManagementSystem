@@ -33,12 +33,6 @@ public class DepartmentService {
         return savedDepartment;
     }
 
-    public Optional<DepartmentEntity> findDepartmentById(Long id) {
-        if (departmentRepository.findById(id).isPresent()) {
-            return departmentRepository.findById(id);
-        } else throw new NotFoundException("Could not find department with id " + id);
-    }
-
     public List<DepartmentEntity> getAllDepartments() {
         return departmentRepository.findAll();
     }
@@ -74,8 +68,23 @@ public class DepartmentService {
 
     }
 
+    public Optional<DepartmentEntity> findDepartmentById(Long id) {
+        if (departmentRepository.findById(id).isPresent()) {
+            return departmentRepository.findById(id);
+        } else throw new NotFoundException("Could not find department with id " + id);
+    }
+
     public Optional<UserEntity> findUserById(Long id) {
-        return Optional.ofNullable(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if (userRepository.findById(id).isPresent()) {
+            return userRepository.findById(id);
+        } else throw new NotFoundException("Could not find user with id " + id);
+    }
+
+    public Optional<ItemEntity> findItemById(Long id) {
+        if (itemRepository.findById(id).isPresent()) {
+            return itemRepository.findById(id);
+        } else throw new NotFoundException("Could not find item with id " + id);
+
     }
 
 
@@ -107,7 +116,7 @@ public class DepartmentService {
 
     public Optional<DepartmentEntity> linkItemToDepartment(Long departmentId, Long itemId) {
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
-        Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
+        Optional<ItemEntity> foundItem = findItemById(itemId);
 
         if (!foundDepartment.get().getItemList().contains(foundItem.get())){
             foundDepartment.get().addItem(foundItem.get());
@@ -119,7 +128,7 @@ public class DepartmentService {
 
     public Optional<DepartmentEntity> unLinkItemFromDepartment(Long departmentId, Long itemId) {
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
-        Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
+        Optional<ItemEntity> foundItem = findItemById(itemId);
 
         foundDepartment.get().removeItem(foundItem.get());
         departmentRepository.save(foundDepartment.get());

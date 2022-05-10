@@ -109,7 +109,7 @@ public class DepartmentService {
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
         Optional<ItemEntity> foundItem = itemRepository.findById(itemId);
 
-        if (foundDepartment.get().getItemList().stream().anyMatch(item -> item.getName().equals(foundItem))){
+        if (!foundDepartment.get().getItemList().contains(foundItem.get())){
             foundDepartment.get().addItem(foundItem.get());
             departmentRepository.save(foundDepartment.get());
         } else throw new AlreadyLinkedException("The entity that you are trying to link is already linked.");

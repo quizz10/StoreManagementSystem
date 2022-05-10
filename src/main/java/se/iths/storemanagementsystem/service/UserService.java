@@ -51,13 +51,8 @@ public class UserService {
     }
 
     public Optional<UserEntity> updateUser(Long id, Optional<UserEntity> userEntity) {
-        Optional<UserEntity> foundUser = userRepository.findById(id);
-
-        if (foundUser.isPresent()) {
+        Optional<UserEntity> foundUser = findUserById(id);
             setFields(userEntity, foundUser);
-        } else {
-            throw new RuntimeException("Could not find");
-        }
         userRepository.save(foundUser.get());
         return foundUser;
     }
@@ -83,7 +78,7 @@ public class UserService {
     }
 
     public Optional<UserEntity> updateUserRole(Long id, String roleName) {
-        Optional<UserEntity> foundUser = userRepository.findById(id);
+        Optional<UserEntity> foundUser = findUserById(id);
         RoleEntity role = roleRepository.findByName(roleName);
         if (role == null) {
             throw new NotFoundException("Could not find role with name " + roleName);
@@ -115,6 +110,7 @@ public class UserService {
 
         ShoppingCartEntity shoppingCart = new ShoppingCartEntity();
         shoppingCart.setUser(customer);
+        customer.setShoppingCart(shoppingCart);
         shoppingCartRepository.save(shoppingCart);
 
         store.addDepartment(frukt);
@@ -156,7 +152,7 @@ public class UserService {
                 throw new WrongEmailFormatException("Email format is invalid.");
         }
 
-        jmsSender.sendMessage(savedUser);
+//        jmsSender.sendMessage(savedUser);
         return savedUser;
     }
 }

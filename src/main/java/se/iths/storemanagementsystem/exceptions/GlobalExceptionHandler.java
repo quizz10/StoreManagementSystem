@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import se.iths.storemanagementsystem.exceptions.customexceptions.DuplicateEmailException;
+import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
 import se.iths.storemanagementsystem.exceptions.customexceptions.ShortPasswordException;
 import se.iths.storemanagementsystem.exceptions.customexceptions.WrongEmailFormatException;
 
@@ -37,6 +38,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String errorMessage = "User entered duplicate email";
 
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, errorMessage, d));
+    }
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<Object> notFoundException(NotFoundException n) {
+        logger.info(n.getClass().getName());
+        String errorMessage = "ID not in database";
+
+        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, errorMessage, n));
     }
 
     @ExceptionHandler({WrongEmailFormatException.class})

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public class ApiError {
     private HttpStatus status;
-    @JsonFormat(pattern = "dd-MM-yyy hh:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private String message;
     private String debugMessage;

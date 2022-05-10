@@ -38,13 +38,10 @@ public class DepartmentService {
     }
 
     public Optional<DepartmentEntity> updateDepartment(Long id, String departmentName) {
-        Optional<DepartmentEntity> foundDepartment = departmentRepository.findById(id);
+        Optional<DepartmentEntity> foundDepartment = findDepartmentById(id);
 
-        if (foundDepartment.isPresent()) {
-            setFields(departmentName, foundDepartment);
-        } else {
-            throw new RuntimeException("Could not find");
-        }
+        setFields(departmentName, foundDepartment);
+
         departmentRepository.save(foundDepartment.get());
         return foundDepartment;
     }
@@ -118,7 +115,7 @@ public class DepartmentService {
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
         Optional<ItemEntity> foundItem = findItemById(itemId);
 
-        if (!foundDepartment.get().getItemList().contains(foundItem.get())){
+        if (!foundDepartment.get().getItemList().contains(foundItem.get())) {
             foundDepartment.get().addItem(foundItem.get());
             departmentRepository.save(foundDepartment.get());
         } else throw new AlreadyLinkedException("The entity that you are trying to link is already linked.");

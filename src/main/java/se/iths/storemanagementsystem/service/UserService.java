@@ -153,6 +153,5 @@ public class UserService {
         userRepository.save(user);
         userRepository.save(admin);
         userRepository.save(employee);
-
     }
 }

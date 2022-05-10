@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import se.iths.storemanagementsystem.exceptions.customexceptions.DuplicateEmailException;
-import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
-import se.iths.storemanagementsystem.exceptions.customexceptions.ShortPasswordException;
-import se.iths.storemanagementsystem.exceptions.customexceptions.WrongEmailFormatException;
+import se.iths.storemanagementsystem.exceptions.customexceptions.*;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -53,6 +50,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String errorMessage = "User entered email incorrectly";
 
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, errorMessage, w));
+    }
+
+    @ExceptionHandler({AlreadyLinkedException.class})
+    protected ResponseEntity<Object> alreadyLinkedException(AlreadyLinkedException a) {
+        logger.info(a.getClass().getName());
+        String errorMessage = "The entity that you are trying to link is already linked.";
+        return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, errorMessage, a));
     }
 
     @Override

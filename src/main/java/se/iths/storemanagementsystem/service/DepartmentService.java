@@ -5,6 +5,7 @@ import se.iths.storemanagementsystem.entity.DepartmentEntity;
 import se.iths.storemanagementsystem.entity.ItemEntity;
 import se.iths.storemanagementsystem.entity.StoreEntity;
 import se.iths.storemanagementsystem.entity.UserEntity;
+import se.iths.storemanagementsystem.exceptions.customexceptions.AlreadyLinkedException;
 import se.iths.storemanagementsystem.exceptions.customexceptions.NotFoundException;
 import se.iths.storemanagementsystem.repository.DepartmentRepository;
 import se.iths.storemanagementsystem.repository.ItemRepository;
@@ -83,10 +84,10 @@ public class DepartmentService {
         Optional<DepartmentEntity> foundDepartment = findDepartmentById(departmentId);
         Optional<UserEntity> foundUser = findUserById(userId);
 
-        if (foundUser.get().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"))) {
+        if (foundUser.get().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE")) && !foundDepartment.get().getEmployeeList().contains(foundUser.get())) {
             foundDepartment.get().addEmployee(foundUser.get());
             departmentRepository.save(foundDepartment.get());
-        }
+        } else throw new AlreadyLinkedException("The entity that you are trying to link is already linked.");
         return foundUser;
     }
 
